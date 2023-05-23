@@ -4,4 +4,4 @@
 Brandon Jacobson - Technology Lead  
 Jimmy Nguyen - Testing Lead
 Jimmy Nguyen - SFX Audio
-Madison Li
+Madison Li - Art
