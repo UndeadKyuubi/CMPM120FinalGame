@@ -43,10 +43,66 @@ class Intro extends Phaser.Scene {
                 });
             
             this.cameras.main.fade(1000, 0,0,0);
-            this.time.delayedCall(1000, () => this.scene.start('lv1'));
+            this.time.delayedCall(1000, () => this.scene.start('first'));
         });
     }
 }
+class First extends Phaser.Scene{
+    constructor() {
+        super('first')
+    }
+    preload()
+    {
+        this.load.image('player', './assets/playerplaceholder.png');
+        this.load.image('background', './assets/Sprite-0002.png');
+        let player=null;
+        let cursors=null;
+        let keyW=null;
+        let keyA=null;
+        let keyS=null;
+        let keyD=null;
+
+    }
+    create(){
+    this.player=this.matter.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"player");
+    this.add.image(this.sys.game.config.width / 2,this.sys.game.config.height / 2,'background');
+    this.matter.world.setBounds(0,0,3000,3000);
+    // Enable camera to follow the player
+    this.cameras.main.startFollow(this.player, true, 0.5, 0.5);
+    //keybinds
+    this.cursors = this.input.keyboard.createCursorKeys();
+    this.keyW = this.input.keyboard.addKey('W');
+    this.keyA = this.input.keyboard.addKey('A');
+    this.keyS = this.input.keyboard.addKey('S');
+    this.keyD = this.input.keyboard.addKey('D');
+
+    }
+    update() {
+        //controls
+        this.player.setVelocity(0);
+    
+        
+        if (this.cursors.up.isDown || this.keyW.isDown) {
+            this.player.setVelocityY(-10);
+        } else if (this.cursors.down.isDown || this.keyS.isDown) {
+            this.player.setVelocityY(10);
+        }
+    
+        if (this.cursors.left.isDown || this.keyA.isDown) {
+            this.player.setVelocityX(-10);
+        } else if (this.cursors.right.isDown || this.keyD.isDown) {
+            this.player.setVelocityX(10);
+        }
+    }
+    
+    
+}
+// class Future extends Phaser.scene{
+//     constructor()
+//     {
+//         super('future');
+//     }
+// }
 const game = new Phaser.Game({
     scale: {
         mode: Phaser.Scale.FIT,
@@ -59,11 +115,11 @@ const game = new Phaser.Game({
         default:'matter',
         matter:{
             gravity:{
-               y:.9
+               y:0
             },
-            debug:false
+            debug:true
         }
     },
-    scene: [Intro],
+    scene: [Intro,First],
     title: "physics Game",
 });
