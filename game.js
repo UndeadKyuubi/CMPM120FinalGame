@@ -1,3 +1,5 @@
+let GobalItemX=0;
+let GlobalItemY=0;
 class Intro extends Phaser.Scene {
     constructor() {
         super('intro')
@@ -55,6 +57,7 @@ class First extends Phaser.Scene{
     {
         this.load.image('player', './assets/playerplaceholder.png');
         this.load.image('background', './assets/Sprite-0002.png');
+        this.load.image('box', './assets/box.png');
         let player=null;
         let cursors=null;
         let keyW=null;
@@ -64,24 +67,58 @@ class First extends Phaser.Scene{
 
     }
     create(){
-    this.player=this.matter.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"player");
+    this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"player");
+    this.target = new Phaser.Math.Vector2();
+    
     this.add.image(this.sys.game.config.width / 2,this.sys.game.config.height / 2,'background');
-    this.matter.world.setBounds(0,0,3000,3000);
+    this.physics.world.setBounds(0,0,3000,3000);
     // Enable camera to follow the player
-    this.cameras.main.startFollow(this.player, true, 0.5, 0.5);
+    this.cameras.main.startFollow(this.player);
+    //Point and click movement
+    this.input.on('pointerdown', (pointer) =>
+    {
+        this.target.x = pointer.x;
+        this.target.y = pointer.y;
+
+        //Move at 200 px/s:
+        this.physics.moveToObject(this.player, this.target, 200);
+
+        //cursors.copyPosition(this.target).setVisible(true);
+    });
+
     //keybinds
     this.cursors = this.input.keyboard.createCursorKeys();
     this.keyW = this.input.keyboard.addKey('W');
     this.keyA = this.input.keyboard.addKey('A');
     this.keyS = this.input.keyboard.addKey('S');
     this.keyD = this.input.keyboard.addKey('D');
+    this.player.setAngularVelocity(0);
+
+    // Code for making pushable box 
+
+    box = this.physics.add.sprite(200, 200, "box").setCollideWorldBounds().setInteractive();
+
+    this.physics.add.collider(this.player, box);
+
+    // -----------------------------------------
 
     }
     update() {
         //controls
         this.player.setVelocity(0);
     
-        
+        const tolerance = 4;
+
+        const distance = Phaser.Math.Distance.BetweenPoints(this.player, this.target);
+
+        if (this.player.body.speed > 0)
+        {
+            if (distance < tolerance)
+            {
+                this.player.body.reset(this.target.x, this.target.y);
+            }
+        }
+
         if (this.cursors.up.isDown || this.keyW.isDown) {
             this.player.setVelocityY(-10);
         } else if (this.cursors.down.isDown || this.keyS.isDown) {
@@ -97,6 +134,8 @@ class First extends Phaser.Scene{
     
     
 }
+
+
 // class Future extends Phaser.scene{
 //     constructor()
 //     {
@@ -112,8 +151,8 @@ const game = new Phaser.Game({
         
     },
     physics:{
-        default:'matter',
-        matter:{
+        default:'arcade',
+        physics:{
             gravity:{
                y:0
             },
