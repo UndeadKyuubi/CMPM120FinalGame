@@ -86,14 +86,6 @@ class First extends Phaser.Scene{
         //cursors.copyPosition(this.target).setVisible(true);
     });
 
-    //keybinds
-    this.cursors = this.input.keyboard.createCursorKeys();
-    this.keyW = this.input.keyboard.addKey('W');
-    this.keyA = this.input.keyboard.addKey('A');
-    this.keyS = this.input.keyboard.addKey('S');
-    this.keyD = this.input.keyboard.addKey('D');
-    this.player.setAngularVelocity(0);
-
     // Code for making pushable box 
 
     box = this.physics.add.sprite(200, 200, "box").setCollideWorldBounds().setInteractive();
@@ -105,7 +97,7 @@ class First extends Phaser.Scene{
     }
     update() {
         //controls
-        this.player.setVelocity(0);
+        //this.player.setVelocity(0);
     
         const tolerance = 4;
 
@@ -119,7 +111,7 @@ class First extends Phaser.Scene{
             }
         }
 
-        if (this.cursors.up.isDown || this.keyW.isDown) {
+        /*if (this.cursors.up.isDown || this.keyW.isDown) {
             this.player.setVelocityY(-10);
         } else if (this.cursors.down.isDown || this.keyS.isDown) {
             this.player.setVelocityY(10);
@@ -129,7 +121,7 @@ class First extends Phaser.Scene{
             this.player.setVelocityX(-10);
         } else if (this.cursors.right.isDown || this.keyD.isDown) {
             this.player.setVelocityX(10);
-        }
+        }*/
     }
     
     
