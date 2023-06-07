@@ -53,52 +53,59 @@ class First extends Phaser.Scene{
     constructor() {
         super('first')
     }
+
     preload()
     {
-        this.load.image('player', './assets/playerplaceholder.png');
         this.load.image('background', './assets/Sprite-0002.png');
+        this.load.image('player', './assets/test2.png');   
         this.load.image('box', './assets/box.png');
-        let player=null;
-        let cursors=null;
-        let keyW=null;
-        let keyA=null;
-        let keyS=null;
-        let keyD=null;
-
     }
+
     create(){
-    this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"player");
-    this.target = new Phaser.Math.Vector2();
-    
-    this.add.image(this.sys.game.config.width / 2,this.sys.game.config.height / 2,'background');
-    this.physics.world.setBounds(0,0,3000,3000);
-    // Enable camera to follow the player
-    this.cameras.main.startFollow(this.player);
-    //Point and click movement
-    this.input.on('pointerdown', (pointer) =>
-    {
-        this.target.x = pointer.x;
-        this.target.y = pointer.y;
+        this.add.image(this.sys.game.config.width / 2,this.sys.game.config.height / 2,'background');
 
-        //Move at 200 px/s:
-        this.physics.moveToObject(this.player, this.target, 200);
+        this.physics.world.setBounds(0,0,3000,3000);
 
-        //cursors.copyPosition(this.target).setVisible(true);
-    });
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"player").setScale(.1);
+        this.player.setCollideWorldBounds(true, 0, 0);
+        
+        this.target = new Phaser.Math.Vector2();
+        
+        // Enable camera to follow the player
+        this.cameras.main.startFollow(this.player);
 
-    // Code for making pushable box 
+        //Point and click movement
+        this.input.on('pointerdown', (pointer) =>
+        {
+            this.target = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
 
-    box = this.physics.add.sprite(200, 200, "box").setCollideWorldBounds().setInteractive();
+            //Move at 200 px/s:
+            this.physics.moveToObject(this.player, this.target, 200);
+        });
 
-    this.physics.add.collider(this.player, box);
+        //Block push
+        //this.player.setInteractive();
+        let colliderSet = true;
 
-    // -----------------------------------------
+        const setVelocity = (body, v) =>
+        {
+            if (colliderSet)
+            {
+                body.setVelocity(v);
+            }
+        }
+        const testBlock = this.physics.add.image(this.sys.game.config.width / 4, this.sys.game.config.height / 2, 'box').setCollideWorldBounds().setInteractive();
+
+        testBlock.setBounce(0.5);
+        testBlock.setPushable(true);
+        this.player.setImmoveable(true);
+
+        this.physics.add.collider(this.player, testBlock);
 
     }
+
     update() {
         //controls
-        //this.player.setVelocity(0);
-    
         const tolerance = 4;
 
         const distance = Phaser.Math.Distance.BetweenPoints(this.player, this.target);
@@ -110,47 +117,23 @@ class First extends Phaser.Scene{
                 this.player.body.reset(this.target.x, this.target.y);
             }
         }
-
-        /*if (this.cursors.up.isDown || this.keyW.isDown) {
-            this.player.setVelocityY(-10);
-        } else if (this.cursors.down.isDown || this.keyS.isDown) {
-            this.player.setVelocityY(10);
-        }
-    
-        if (this.cursors.left.isDown || this.keyA.isDown) {
-            this.player.setVelocityX(-10);
-        } else if (this.cursors.right.isDown || this.keyD.isDown) {
-            this.player.setVelocityX(10);
-        }*/
     }
-    
-    
 }
 
-
-// class Future extends Phaser.scene{
-//     constructor()
-//     {
-//         super('future');
-//     }
-// }
 const game = new Phaser.Game({
     scale: {
         mode: Phaser.Scale.FIT,
         autoCenter: Phaser.Scale.CENTER_BOTH,
         width: 1920,
-        height: 1080,
-        
+        height: 1080        
     },
-    physics:{
+    physics: {
         default:'arcade',
-        physics:{
-            gravity:{
-               y:0
-            },
-            debug:true
+        arcade: {
+            debug: true,
+            gravity: { y: 0}
         }
     },
-    scene: [Intro,First],
-    title: "physics Game",
+    scene: [Intro, First],
+    title: "Final Game",
 });
