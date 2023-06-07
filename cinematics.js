@@ -96,6 +96,6 @@ const cinematics = new Phaser.Game({
 })
 
 let centerX = cinematics.config.width/2;
-let centerY = cinematis.config.height/2;
+let centerY = cinematics.config.height/2;
 let w = cinematics.config.width;
 let h = cinematics.config.height;
