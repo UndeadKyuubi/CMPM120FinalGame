@@ -9,7 +9,11 @@ class coreGameplay extends Phaser.Scene {
 
     create(){
         this.player = this.physics.add.sprite(this.sys.game.config.width / 2, this.sys.game.config.height / 2, 'player');
-        const block=this.physics.add.image(this.sys.game.config.width *.3, this.sys.game.config.height * .2, 'box.png')
+        this.block=this.physics.add.image(this.sys.game.config.width *.3, this.sys.game.config.height * .2, 'box.png')
+        this.block.setPushable(true);
+        this.physics.add.collider(this.player,this.block);
+        this.block.setFriction(10,10);
+
         this.cameras.main.startFollow(this.player);
 
         this.target = new Phaser.Math.Vector2();
@@ -22,7 +26,10 @@ class coreGameplay extends Phaser.Scene {
         });
     }
 
+    
+
     update(){
+        
         const tolerance = 4;
 
         const distance = Phaser.Math.Distance.BetweenPoints(this.player, this.target);
@@ -34,6 +41,7 @@ class coreGameplay extends Phaser.Scene {
         }
     }
 }
+
 
 const game = new Phaser.Game({
     scale: {

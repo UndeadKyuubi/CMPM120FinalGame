@@ -62,8 +62,7 @@ class First extends Phaser.Scene{
     }
 
     create(){
-        this.add.image(this.sys.game.config.width / 2,this.sys.game.config.height / 2,'background');
-
+        let background= this.physics.add.image(this.sys.game.config.width / 2,this.sys.game.config.height / 2,'background');
         this.physics.world.setBounds(0,0,3000,3000);
 
         this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"player").setScale(.1);
@@ -84,24 +83,19 @@ class First extends Phaser.Scene{
         });
 
         //Block push
-        //this.player.setInteractive();
-        let colliderSet = true;
-
-        const setVelocity = (body, v) =>
-        {
-            if (colliderSet)
-            {
-                body.setVelocity(v);
-            }
-        }
+        this.player.setInteractive();
+        
         const testBlock = this.physics.add.image(this.sys.game.config.width / 4, this.sys.game.config.height / 2, 'box').setCollideWorldBounds().setInteractive();
 
         testBlock.setBounce(0.5);
         testBlock.setPushable(true);
-        this.player.setImmoveable(true);
+        this.player.setImmovable(true);
+        testBlock.setVelocity(0);
+
+        testBlock.setDragX(1000);
+        testBlock.setDragY(1000);
 
         this.physics.add.collider(this.player, testBlock);
-
     }
 
     update() {
