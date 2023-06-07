@@ -91,7 +91,7 @@ const cinematics = new Phaser.Game({
         height: 1080,  
         backgroundColor: '#000000'      
     },
-    scene: [Menu, Loading, PlaceHolder],
+    scene: [Menu, Loading, Placeholder],
     title: "Cinematics Prototype",
 })
 
