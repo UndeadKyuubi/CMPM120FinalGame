@@ -97,7 +97,7 @@ class First extends Phaser.Scene{
 
         this.physics.add.collider(this.player, testBlock);
 
-        this.scene.launch('hud');
+        this.scene.launch('hud', { currScene: 'past'});
     }
 
     update() {
@@ -120,11 +120,44 @@ class Second extends Phaser.Scene {
     constructor(){
         super('second');
     }
+
+    preload()
+    {
+        this.load.image('player', './assets/test2.png');   
+    }
+
+    create(){
+        this.physics.world.setBounds(0,0,3000,3000);
+
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"player").setScale(.1);
+        this.player.setCollideWorldBounds(true, 0, 0);
+        
+        this.target = new Phaser.Math.Vector2();
+        
+        // Enable camera to follow the player
+        this.cameras.main.startFollow(this.player);
+
+        //Point and click movement
+        this.input.on('pointerdown', (pointer) =>
+        {
+            this.target = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+
+            //Move at 200 px/s:
+            this.physics.moveToObject(this.player, this.target, 200);
+        });
+
+        this.add.rectangle(this.sys.game.config.width / 4, this.sys.game.config.height / 2, 300, 300, 0xabffab, 1);
+        this.scene.launch('hud', { currScene: 'future'});
+    }
 }
 
 class HUD extends Phaser.Scene {
     constructor(){
         super('hud');
+    }
+
+    init(data){
+        this.currentScene = data.currScene;
     }
 
     create(){
@@ -133,6 +166,15 @@ class HUD extends Phaser.Scene {
         this.swapButton.on('pointerdown', () =>
         {
             console.log("swapped");
+
+            if (this.currentScene == 'past') {
+                this.scene.sleep('first');
+                this.scene.launch('second');
+            }
+            else {
+                this.scene.sleep('second');
+                this.scene.launch('first');
+            }
         });
     }
 }
