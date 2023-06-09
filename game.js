@@ -116,6 +116,12 @@ class First extends Phaser.Scene{
     }
 }
 
+class Second extends Phaser.Scene {
+    constructor(){
+        super('second');
+    }
+}
+
 class HUD extends Phaser.Scene {
     constructor(){
         super('hud');
@@ -145,6 +151,6 @@ const game = new Phaser.Game({
             gravity: { y: 0}
         }
     },
-    scene: [Intro, First, HUD],
+    scene: [Intro, First, HUD, Second],
     title: "Final Game",
 });
