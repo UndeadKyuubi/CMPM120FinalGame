@@ -1,5 +1,10 @@
 let GobalItemX=0;
 let GlobalItemY=0;
+
+let swapPast = 0;
+let swapFuture = 0;
+let currScene = 'past';
+
 class Intro extends Phaser.Scene {
     constructor() {
         super('intro')
@@ -97,7 +102,7 @@ class First extends Phaser.Scene{
 
         this.physics.add.collider(this.player, testBlock);
 
-        this.scene.launch('hud', { currScene: 'past'});
+        this.scene.launch('hud');
     }
 
     update() {
@@ -146,18 +151,29 @@ class Second extends Phaser.Scene {
             this.physics.moveToObject(this.player, this.target, 200);
         });
 
-        this.add.rectangle(this.sys.game.config.width / 4, this.sys.game.config.height / 2, 300, 300, 0xabffab, 1);
-        this.scene.launch('hud', { currScene: 'future'});
+        this.add.rectangle(this.sys.game.config.width / 4, this.sys.game.config.height / 2, 200, 200, 0xabffab, 1);
+        this.scene.launch('hud');
+    }
+
+    update() {
+        //controls
+        const tolerance = 4;
+
+        const distance = Phaser.Math.Distance.BetweenPoints(this.player, this.target);
+
+        if (this.player.body.speed > 0)
+        {
+            if (distance < tolerance)
+            {
+                this.player.body.reset(this.target.x, this.target.y);
+            }
+        }
     }
 }
 
 class HUD extends Phaser.Scene {
     constructor(){
         super('hud');
-    }
-
-    init(data){
-        this.currentScene = data.currScene;
     }
 
     create(){
@@ -167,13 +183,29 @@ class HUD extends Phaser.Scene {
         {
             console.log("swapped");
 
-            if (this.currentScene == 'past') {
+            if (currScene == 'past' && swapFuture == 0) {
+                currScene = 'future';
+                swapFuture += 1;
                 this.scene.sleep('first');
                 this.scene.launch('second');
             }
-            else {
+            else if (currScene == 'future' && swapPast == 0){
+                currScene = 'past';
+                swapPast += 1;
                 this.scene.sleep('second');
-                this.scene.launch('first');
+                this.scene.run('first');
+            }
+            else if (currScene == 'past' && swapFuture != 0) {
+                currScene = 'future';
+                swapFuture += 1;
+                this.scene.sleep('first');
+                this.scene.run('second');
+            }
+            else if (currScene == 'future' && swapPast != 0) {
+                currScene = 'past';
+                swapPast += 1;
+                this.scene.sleep('second');
+                this.scene.run('first');
             }
         });
     }
