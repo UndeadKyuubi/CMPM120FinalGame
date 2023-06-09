@@ -90,17 +90,17 @@ class First extends Phaser.Scene{
         //Block push
         this.player.setInteractive();
         
-        const testBlock = this.physics.add.image(this.sys.game.config.width / 4, this.sys.game.config.height / 2, 'box').setCollideWorldBounds().setInteractive();
+        this.testBlock = this.physics.add.image(this.sys.game.config.width / 4, this.sys.game.config.height +100, 'box').setCollideWorldBounds().setInteractive();
 
-        testBlock.setBounce(0.5);
-        testBlock.setPushable(true);
+        this.testBlock.setBounce(0.5);
+        this.testBlock.setPushable(true);
         this.player.setImmovable(true);
-        testBlock.setVelocity(0);
+        this.testBlock.setVelocity(0);
 
-        testBlock.setDragX(1000);
-        testBlock.setDragY(1000);
+        this.testBlock.setDragX(1000);
+        this.testBlock.setDragY(1000);
 
-        this.physics.add.collider(this.player, testBlock);
+        this.physics.add.collider(this.player, this.testBlock);
 
         this.scene.launch('hud');
     }
@@ -138,7 +138,7 @@ class Second extends Phaser.Scene {
         const map = this.make.tilemap({key: 'tilemap'});
 
         const tileset = map.addTilesetImage('testTileset', 'base_tiles');
-        
+
         map.createLayer('Tile Layer 1', tileset);
 
         this.solidLayer = map.createLayer('Tile Layer 2', tileset);
@@ -166,7 +166,21 @@ class Second extends Phaser.Scene {
             this.physics.moveToObject(this.player, this.target, 200);
         });
 
-        //this.add.rectangle(this.sys.game.config.width / 4, this.sys.game.config.height / 2, 200, 200, 0xabffab, 1);
+        //Block push
+        this.player.setInteractive();
+
+        this.testBlock = this.physics.add.image(this.sys.game.config.width / 4, this.sys.game.config.height +100, 'box').setCollideWorldBounds().setInteractive();
+
+        this.testBlock.setBounce(0.5);
+        this.testBlock.setPushable(true);
+        this.player.setImmovable(true);
+        this.testBlock.setVelocity(0);
+
+        this.testBlock.setDragX(1000);
+        this.testBlock.setDragY(1000);
+
+        this.physics.add.collider(this.player, this.testBlock);
+
         this.scene.launch('hud');
     }
 
