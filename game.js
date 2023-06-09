@@ -128,14 +128,29 @@ class Second extends Phaser.Scene {
 
     preload()
     {
-        this.load.image('player', './assets/test2.png');   
+        this.load.image('player', './assets/test2.png');
+        this.load.image('base_tiles', './assets/base_tiles.png');  
+        
+        this.load.tilemapTiledJSON('tilemap', './assets/testMap.json')
     }
 
     create(){
+        const map = this.make.tilemap({key: 'tilemap'});
+
+        const tileset = map.addTilesetImage('testTileset', 'base_tiles');
+        
+        map.createLayer('Tile Layer 1', tileset);
+
+        this.solidLayer = map.createLayer('Tile Layer 2', tileset);
+        this.solidLayer.setCollisionByProperty({collides: true});
+        this.solidLayer.renderDebug(this.add.graphics());
+
         this.physics.world.setBounds(0,0,3000,3000);
 
-        this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"player").setScale(.1);
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 50,this.sys.game.config.height / 2,"player").setScale(.1);
         this.player.setCollideWorldBounds(true, 0, 0);
+
+        this.physics.add.collider(this.player, this.solidLayer);
         
         this.target = new Phaser.Math.Vector2();
         
@@ -151,7 +166,7 @@ class Second extends Phaser.Scene {
             this.physics.moveToObject(this.player, this.target, 200);
         });
 
-        this.add.rectangle(this.sys.game.config.width / 4, this.sys.game.config.height / 2, 200, 200, 0xabffab, 1);
+        //this.add.rectangle(this.sys.game.config.width / 4, this.sys.game.config.height / 2, 200, 200, 0xabffab, 1);
         this.scene.launch('hud');
     }
 
