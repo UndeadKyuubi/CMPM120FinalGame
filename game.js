@@ -26,7 +26,7 @@ class Intro extends Phaser.Scene {
             });
             
             // Add event listener for mouseout event
-            text.on('pointerout', function() {
+            text.on('pointerout', () => {
                 // Tween the text back to its original size
                 this.tweens.add({
                     targets: text,
@@ -225,6 +225,6 @@ const game = new Phaser.Game({
             gravity: { y: 0}
         }
     },
-    scene: [Intro, First, HUD, Second],
+    scene: [Intro, First, Second, HUD],
     title: "Final Game",
 });
