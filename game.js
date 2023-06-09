@@ -96,6 +96,8 @@ class First extends Phaser.Scene{
         testBlock.setDragY(1000);
 
         this.physics.add.collider(this.player, testBlock);
+
+        this.scene.launch('hud');
     }
 
     update() {
@@ -114,6 +116,21 @@ class First extends Phaser.Scene{
     }
 }
 
+class HUD extends Phaser.Scene {
+    constructor(){
+        super('hud');
+    }
+
+    create(){
+        this.swapButton = this.add.rectangle(150, 1000, 200, 75, 0xababab, 1).setInteractive();
+
+        this.swapButton.on('pointerdown', () =>
+        {
+            console.log("swapped");
+        });
+    }
+}
+
 const game = new Phaser.Game({
     scale: {
         mode: Phaser.Scale.FIT,
@@ -128,6 +145,6 @@ const game = new Phaser.Game({
             gravity: { y: 0}
         }
     },
-    scene: [Intro, First],
+    scene: [Intro, First, HUD],
     title: "Final Game",
 });
