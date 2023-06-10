@@ -267,7 +267,7 @@ class HUD extends Phaser.Scene {
 
     create(){
         this.swapButton = this.add.rectangle(150, 1000, 200, 75, 0xababab, 1).setInteractive();
-
+        this.muteButton = this.add.rectangle(500, 1000, 200, 75, 0xababab, 1).setInteractive();
         this.swapButton.on('pointerdown', () =>
         {
             if (isMoving == false) {
@@ -300,15 +300,23 @@ class HUD extends Phaser.Scene {
 
             }
         });
+        this.muteButton.on('pointerdown', () =>
+        {
+            
+        });
     }
 }
-function toggleAudioOff()
+function toggleAudio()
 {
-
+    if (localStorage.getItem('audioMute')) {
+        localStorage.removeItem('audioMute');
+        this.sound.mute = false;
+    }
+    else{
     const isMuted = localStorage.getItem('audioMute') === 'true';
     localStorage.setItem('audioMute', updatedMuteState.toString());
     this.sound.mute = updatedMuteState;
-
+    }
 
 }
 
