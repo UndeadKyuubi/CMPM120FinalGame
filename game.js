@@ -5,6 +5,7 @@ let lightY=0;
 
 let boxX = 0;
 let boxY = 0;
+let isMoving=false;
 
 let swapPast = 0;
 let swapFuture = 0;
@@ -118,17 +119,22 @@ class First extends Phaser.Scene{
 
         if (this.player.body.speed > 0)
         {
+            isMoving = true;
             if (distance < tolerance)
             {
                 this.player.body.reset(this.target.x, this.target.y);
             }
         }
-
+        else{
+            isMoving = false;
+        }
+        if()
         boxX = this.testBlock.x;
         boxY = this.testBlock.y;
+        lightX=this.player.x;
+        lightY=this.player.y;
     }
-    lightX=this.player.x;
-    lightY=this.
+   
 }
 
 class Second extends Phaser.Scene {
@@ -145,20 +151,21 @@ class Second extends Phaser.Scene {
     }
 
     create(){
-        this.lights.enable().setAmbientColor(0x333333);
+        
+        this.lights.enable().setAmbientColor(0x000000);
         const map = this.make.tilemap({key: 'tilemap'});
 
         const tileset = map.addTilesetImage('testTileset', 'base_tiles');
         //tileset.setPipeline("Light2D");
-        const light = this.lights.addLight(180, 80, 200).setColor(0xffffff).setIntensity(2);
+        this.light = this.lights.addLight(180, 80, 200).setColor(0x00FFFF).setIntensity(1);
 
-        this.input.on('pointermove', pointer =>
-        {
+         /*this.input.on('pointermove', pointer =>
+         {
 
-            light.x = pointer.x;
-            light.y = pointer.y;
+            this.light.x=pointer.x;
+            this.light.y=pointer.y;
 
-        });
+         });*/
 
         this.groundLayer = map.createLayer('Tile Layer 1', tileset);
 
@@ -210,6 +217,7 @@ class Second extends Phaser.Scene {
         this.events.on(Phaser.Scenes.Events.WAKE, function () {
             this.wake();
         }, this);
+       
     }
 
     update() {
@@ -220,16 +228,24 @@ class Second extends Phaser.Scene {
 
         if (this.player.body.speed > 0)
         {
+            isMoving = true;
+
             if (distance < tolerance)
             {
                 this.player.body.reset(this.target.x, this.target.y);
             }
         }
+        else{
+            isMoving = false;
+        }
     }
 
     wake() {
+
         this.testBlock.x = boxX;
         this.testBlock.y = boxY;
+        this.light.x=lightX;
+        this.light.y=lightY;
     }
 }
 
@@ -243,31 +259,34 @@ class HUD extends Phaser.Scene {
 
         this.swapButton.on('pointerdown', () =>
         {
-            console.log("swapped");
+            if (isMoving == false) {
+                console.log("swapped");
 
-            if (currScene == 'past' && swapFuture == 0) {
-                currScene = 'future';
-                swapFuture += 1;
-                this.scene.sleep('first');
-                this.scene.launch('second');
-            }
-            else if (currScene == 'future' && swapPast == 0){
-                currScene = 'past';
-                swapPast += 1;
-                this.scene.sleep('second');
-                this.scene.run('first');
-            }
-            else if (currScene == 'past' && swapFuture != 0) {
-                currScene = 'future';
-                swapFuture += 1;
-                this.scene.sleep('first');
-                this.scene.run('second');
-            }
-            else if (currScene == 'future' && swapPast != 0) {
-                currScene = 'past';
-                swapPast += 1;
-                this.scene.sleep('second');
-                this.scene.run('first');
+                if (currScene == 'past' && swapFuture == 0) {
+                    currScene = 'future';
+                    swapFuture += 1;
+                    this.scene.sleep('first');
+                    this.scene.launch('second');
+                }
+                else if (currScene == 'future' && swapPast == 0){
+                    currScene = 'past';
+                    swapPast += 1;
+                    this.scene.sleep('second');
+                    this.scene.run('first');
+                }
+                else if (currScene == 'past' && swapFuture != 0) {
+                    currScene = 'future';
+                    swapFuture += 1;
+                    this.scene.sleep('first');
+                    this.scene.run('second');
+                }
+                else if (currScene == 'future' && swapPast != 0) {
+                    currScene = 'past';
+                    swapPast += 1;
+                    this.scene.sleep('second');
+                    this.scene.run('first');
+                }
+
             }
         });
     }
