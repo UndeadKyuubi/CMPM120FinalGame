@@ -9,7 +9,7 @@ const config = {
     type: Phaser.AUTO,
     width: 800,
     height: 600,
-    scene: []
+    scene: [MainTitle, Credit, Gameplay, Menu]
 };
 
 const game = new Phaser.Game(config);
@@ -21,7 +21,7 @@ class MainTitle extends Phaser.Scene {
     }
 
     create() {
-        this.add.image(0, 0, 'background')
+        //this.add.image(0, 0, 'background')
 
         startButton.on('pointerup', () => {
             this.scene.start(scenes.gameplay);

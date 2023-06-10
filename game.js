@@ -1,4 +1,4 @@
-let GobalItemX=0;
+let GlobalItemX=0;
 let GlobalItemY=0;
 let lightX=0;
 let lightY=0;
@@ -128,7 +128,7 @@ class First extends Phaser.Scene{
         else{
             isMoving = false;
         }
-        if()
+
         boxX = this.testBlock.x;
         boxY = this.testBlock.y;
         lightX=this.player.x;
@@ -151,13 +151,14 @@ class Second extends Phaser.Scene {
     }
 
     create(){
-        let tempx=0;
-        let tempy=0;
+        this.tempx=0;
+        this.tempy=0;
+
         this.lights.enable().setAmbientColor(0x000000);
         const map = this.make.tilemap({key: 'tilemap'});
 
         const tileset = map.addTilesetImage('testTileset', 'base_tiles');
-        //tileset.setPipeline("Light2D");
+        
         this.light = this.lights.addLight(180, 80, 200).setColor(0x00FFFF).setIntensity(1);
 
          /*this.input.on('pointermove', pointer =>
@@ -242,11 +243,12 @@ class Second extends Phaser.Scene {
     }
 
     wake() {
-        if(!(tempx==boxX&&boxY==tempy))
+        if(this.tempx!=boxX || boxY!=this.tempy)
         {
             this.testBlock.x = boxX;
             this.testBlock.y = boxY;
-            
+            this.tempx=boxX;
+            this.tempy=boxY;
         }
 
         this.light.x=lightX;
