@@ -1,5 +1,10 @@
 let GobalItemX=0;
 let GlobalItemY=0;
+let lightX=0;
+let lightY=0;
+
+let boxX = 0;
+let boxY = 0;
 
 let swapPast = 0;
 let swapFuture = 0;
@@ -118,7 +123,12 @@ class First extends Phaser.Scene{
                 this.player.body.reset(this.target.x, this.target.y);
             }
         }
+
+        boxX = this.testBlock.x;
+        boxY = this.testBlock.y;
     }
+    lightX=this.player.x;
+    lightY=this.
 }
 
 class Second extends Phaser.Scene {
@@ -135,15 +145,29 @@ class Second extends Phaser.Scene {
     }
 
     create(){
+        this.lights.enable().setAmbientColor(0x333333);
         const map = this.make.tilemap({key: 'tilemap'});
 
         const tileset = map.addTilesetImage('testTileset', 'base_tiles');
+        //tileset.setPipeline("Light2D");
+        const light = this.lights.addLight(180, 80, 200).setColor(0xffffff).setIntensity(2);
 
-        map.createLayer('Tile Layer 1', tileset);
+        this.input.on('pointermove', pointer =>
+        {
+
+            light.x = pointer.x;
+            light.y = pointer.y;
+
+        });
+
+        this.groundLayer = map.createLayer('Tile Layer 1', tileset);
 
         this.solidLayer = map.createLayer('Tile Layer 2', tileset);
         this.solidLayer.setCollisionByProperty({collides: true});
-        this.solidLayer.renderDebug(this.add.graphics());
+        //this.solidLayer.renderDebug(this.add.graphics());
+
+        this.groundLayer.setPipeline("Light2D");
+        this.solidLayer.setPipeline("Light2D");
 
         this.physics.world.setBounds(0,0,3000,3000);
 
@@ -169,7 +193,7 @@ class Second extends Phaser.Scene {
         //Block push
         this.player.setInteractive();
 
-        this.testBlock = this.physics.add.image(this.sys.game.config.width / 4, this.sys.game.config.height +100, 'box').setCollideWorldBounds().setInteractive();
+        this.testBlock = this.physics.add.image(boxX, boxY, 'box').setCollideWorldBounds().setInteractive();
 
         this.testBlock.setBounce(0.5);
         this.testBlock.setPushable(true);
@@ -182,6 +206,10 @@ class Second extends Phaser.Scene {
         this.physics.add.collider(this.player, this.testBlock);
 
         this.scene.launch('hud');
+
+        this.events.on(Phaser.Scenes.Events.WAKE, function () {
+            this.wake();
+        }, this);
     }
 
     update() {
@@ -197,6 +225,11 @@ class Second extends Phaser.Scene {
                 this.player.body.reset(this.target.x, this.target.y);
             }
         }
+    }
+
+    wake() {
+        this.testBlock.x = boxX;
+        this.testBlock.y = boxY;
     }
 }
 
