@@ -151,7 +151,8 @@ class Second extends Phaser.Scene {
     }
 
     create(){
-        
+        let tempx=0;
+        let tempy=0;
         this.lights.enable().setAmbientColor(0x000000);
         const map = this.make.tilemap({key: 'tilemap'});
 
@@ -241,7 +242,7 @@ class Second extends Phaser.Scene {
     }
 
     wake() {
-
+        if(tempx==)
         this.testBlock.x = boxX;
         this.testBlock.y = boxY;
         this.light.x=lightX;
