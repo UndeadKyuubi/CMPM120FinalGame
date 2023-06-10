@@ -242,9 +242,13 @@ class Second extends Phaser.Scene {
     }
 
     wake() {
-        if(tempx==)
-        this.testBlock.x = boxX;
-        this.testBlock.y = boxY;
+        if(!(tempx==boxX&&boxY==tempy))
+        {
+            this.testBlock.x = boxX;
+            this.testBlock.y = boxY;
+            
+        }
+
         this.light.x=lightX;
         this.light.y=lightY;
     }
