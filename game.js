@@ -73,6 +73,10 @@ class First extends Phaser.Scene{
     }
 
     create(){
+        if (localStorage.getItem('audioMute')) {
+            const isMuted = localStorage.getItem('audioMute') === 'true';
+            this.sound.mute = isMuted;
+        }
         let background= this.physics.add.image(this.sys.game.config.width / 2,this.sys.game.config.height / 2,'background');
         this.physics.world.setBounds(0,0,3000,3000);
 
@@ -297,6 +301,15 @@ class HUD extends Phaser.Scene {
             }
         });
     }
+}
+function toggleAudioOff()
+{
+
+    const isMuted = localStorage.getItem('audioMute') === 'true';
+    localStorage.setItem('audioMute', updatedMuteState.toString());
+    this.sound.mute = updatedMuteState;
+
+
 }
 
 const game = new Phaser.Game({
