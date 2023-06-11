@@ -60,6 +60,24 @@ class Intro extends Phaser.Scene {
         });
     }
 }
+
+class Box extends Phaser.Physics.Arcade.Image {
+    constructor(scene, x=0, y=0, texture='box'){
+        super(scene, x, y, texture)
+
+        scene.add.existing(this);
+        scene.physics.add.existing(this);
+
+        this.setCollideWorldBounds()
+        this.setInteractive()
+        this.setBounce(0.5)
+        this.setPushable(true)
+        this.setVelocity(0)
+        this.setDragX(1000)
+        this.setDragY(1000)
+    }
+}
+
 class First extends Phaser.Scene{
     constructor() {
         super('first')
@@ -70,13 +88,19 @@ class First extends Phaser.Scene{
         this.load.image('background', './assets/Sprite-0002.png');
         this.load.image('player', './assets/test2.png');   
         this.load.image('box', './assets/box.png');
+        this.load.audio('music',"./assets/Radwimps_-_Date.mp3")
+        this.load.audio('scrape',"./assets/80092__ayliffe__scrape-3.wav")
     }
 
     create(){
-        if (localStorage.getItem('audioMute')) {
-            const isMuted = localStorage.getItem('audioMute') === 'true';
-            this.sound.mute = isMuted;
+   
+        this.sound.add('music');
+        this.boxSound = this.sound.add('scrape');
+        this.sound.play('music');
+        if ((localStorage.getItem('audioMute'))) {
+            game.sound.setMute(true);
         }
+        
         let background= this.physics.add.image(this.sys.game.config.width / 2,this.sys.game.config.height / 2,'background');
         this.physics.world.setBounds(0,0,3000,3000);
 
@@ -100,15 +124,9 @@ class First extends Phaser.Scene{
         //Block push
         this.player.setInteractive();
         
-        this.testBlock = this.physics.add.image(this.sys.game.config.width / 4, this.sys.game.config.height +100, 'box').setCollideWorldBounds().setInteractive();
+        this.testBlock = new Box(this, this.sys.game.config.width / 4, this.sys.game.config.height +100);
 
-        this.testBlock.setBounce(0.5);
-        this.testBlock.setPushable(true);
         this.player.setImmovable(true);
-        this.testBlock.setVelocity(0);
-
-        this.testBlock.setDragX(1000);
-        this.testBlock.setDragY(1000);
 
         this.physics.add.collider(this.player, this.testBlock);
 
@@ -131,6 +149,13 @@ class First extends Phaser.Scene{
         }
         else{
             isMoving = false;
+        }
+
+        if (this.testBlock.body.speed > 0) {
+            if(!this.boxSound.isPlaying)
+            {
+            this.boxSound.play();    
+            }  
         }
 
         boxX = this.testBlock.x;
@@ -206,15 +231,9 @@ class Second extends Phaser.Scene {
         //Block push
         this.player.setInteractive();
 
-        this.testBlock = this.physics.add.image(boxX, boxY, 'box').setCollideWorldBounds().setInteractive();
+        this.testBlock = new Box(this, boxX, boxY);
 
-        this.testBlock.setBounce(0.5);
-        this.testBlock.setPushable(true);
         this.player.setImmovable(true);
-        this.testBlock.setVelocity(0);
-
-        this.testBlock.setDragX(1000);
-        this.testBlock.setDragY(1000);
 
         this.physics.add.collider(this.player, this.testBlock);
 
@@ -268,6 +287,7 @@ class HUD extends Phaser.Scene {
     create(){
         this.swapButton = this.add.rectangle(150, 1000, 200, 75, 0xababab, 1).setInteractive();
         this.muteButton = this.add.rectangle(500, 1000, 200, 75, 0xababab, 1).setInteractive();
+        this.fullButton = this.add.rectangle(1600, 1000, 200, 75, 0xababab, 1).setInteractive();
         this.swapButton.on('pointerdown', () =>
         {
             if (isMoving == false) {
@@ -302,7 +322,15 @@ class HUD extends Phaser.Scene {
         });
         this.muteButton.on('pointerdown', () =>
         {
-            
+            console.log('hello');
+            toggleAudio();
+        });
+        this.fullButton.on('pointerdown', () => {
+            if (this.scale.isFullscreen) {
+                this.scale.stopFullscreen();
+            } else {
+                this.scale.startFullscreen();
+            }
         });
     }
 }
@@ -310,12 +338,11 @@ function toggleAudio()
 {
     if (localStorage.getItem('audioMute')) {
         localStorage.removeItem('audioMute');
-        this.sound.mute = false;
+        game.sound.setMute(!game.sound.mute);
     }
     else{
-    const isMuted = localStorage.getItem('audioMute') === 'true';
-    localStorage.setItem('audioMute', updatedMuteState.toString());
-    this.sound.mute = updatedMuteState;
+    localStorage.setItem('audioMute','mute');
+    game.sound.setMute(!game.sound.mute);
     }
 
 }
