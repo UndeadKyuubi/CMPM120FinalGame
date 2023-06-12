@@ -148,6 +148,7 @@ class YoreLevel1 extends Phaser.Scene{
         this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"animYore");
         this.player.play('idleYore'); //play idle
         this.player.setCollideWorldBounds(true, 0, 0);
+        this.player.body.setSize(75, 128);
         
         this.target = new Phaser.Math.Vector2();
         
