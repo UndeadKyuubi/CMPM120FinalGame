@@ -18,7 +18,6 @@ class Intro extends Phaser.Scene {
     }
     create() {
         let text=this.add.text(1920/2-250,540, "Click to start").setFontSize(60).setInteractive();
-        //var text = this.add.bitMaptext(400, 300, 'Hover over me!').setOrigin(0.5);
     
             text.on('pointerover', ()=> {
                 // Tween the text to a smaller size
