@@ -1,5 +1,3 @@
-let GlobalItemX=0;
-let GlobalItemY=0;
 let lightX=0;
 let lightY=0;
 
@@ -10,6 +8,9 @@ let isMoving=false;
 let swapPast = 0;
 let swapFuture = 0;
 let currScene = 'past';
+
+let past = 'yorelevel1';
+let future = 'neolevel1';
 
 class Intro extends Phaser.Scene {
     constructor() {
@@ -56,7 +57,7 @@ class Intro extends Phaser.Scene {
                 });
             
             this.cameras.main.fade(1000, 0,0,0);
-            this.time.delayedCall(1000, () => this.scene.start('first'));
+            this.time.delayedCall(1000, () => this.scene.start('yorelevel1'));
         });
     }
 }
@@ -78,9 +79,9 @@ class Box extends Phaser.Physics.Arcade.Image {
     }
 }
 
-class First extends Phaser.Scene{
+class YoreLevel1 extends Phaser.Scene{
     constructor() {
-        super('first')
+        super('yorelevel1')
     }
 
     preload()
@@ -166,9 +167,9 @@ class First extends Phaser.Scene{
    
 }
 
-class Second extends Phaser.Scene {
+class NeoLevel1 extends Phaser.Scene {
     constructor(){
-        super('second');
+        super('neolevel1');
     }
 
     preload()
@@ -279,6 +280,42 @@ class Second extends Phaser.Scene {
     }
 }
 
+class YoreLevel2 extends Phaser.Scene {
+    constructor(){
+        super('yorelevel2');
+    }
+}
+
+class NeoLevel2 extends Phaser.Scene {
+    constructor(){
+        super('neolevel2');
+    }
+}
+
+class YoreLevel3 extends Phaser.Scene {
+    constructor(){
+        super('yorelevel3');
+    }
+}
+
+class NeoLevel3 extends Phaser.Scene {
+    constructor(){
+        super('neolevel3');
+    }
+}
+
+class YoreLevel4 extends Phaser.Scene {
+    constructor(){
+        super('yorelevel4');
+    }
+}
+
+class NeoLevel4 extends Phaser.Scene {
+    constructor(){
+        super('neolevel4');
+    }
+}
+
 class HUD extends Phaser.Scene {
     constructor(){
         super('hud');
@@ -296,26 +333,26 @@ class HUD extends Phaser.Scene {
                 if (currScene == 'past' && swapFuture == 0) {
                     currScene = 'future';
                     swapFuture += 1;
-                    this.scene.sleep('first');
-                    this.scene.launch('second');
+                    this.scene.sleep(past);
+                    this.scene.launch(future);
                 }
                 else if (currScene == 'future' && swapPast == 0){
                     currScene = 'past';
                     swapPast += 1;
-                    this.scene.sleep('second');
-                    this.scene.run('first');
+                    this.scene.sleep(future);
+                    this.scene.run(past);
                 }
                 else if (currScene == 'past' && swapFuture != 0) {
                     currScene = 'future';
                     swapFuture += 1;
-                    this.scene.sleep('first');
-                    this.scene.run('second');
+                    this.scene.sleep(past);
+                    this.scene.run(future);
                 }
                 else if (currScene == 'future' && swapPast != 0) {
                     currScene = 'past';
                     swapPast += 1;
-                    this.scene.sleep('second');
-                    this.scene.run('first');
+                    this.scene.sleep(future);
+                    this.scene.run(past);
                 }
 
             }
@@ -334,6 +371,7 @@ class HUD extends Phaser.Scene {
         });
     }
 }
+
 function toggleAudio()
 {
     if (localStorage.getItem('audioMute')) {
@@ -361,6 +399,6 @@ const game = new Phaser.Game({
             gravity: { y: 0}
         }
     },
-    scene: [Intro, First, Second, HUD],
+    scene: [Intro, YoreLevel1, NeoLevel1, YoreLevel2, NeoLevel2, YoreLevel3, NeoLevel3, YoreLevel4, NeoLevel4, HUD],
     title: "Final Game",
 });
