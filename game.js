@@ -91,6 +91,7 @@ class YoreLevel1 extends Phaser.Scene{
         this.load.image('box', './assets/box.png');
         this.load.audio('music',"./assets/Radwimps_-_Date.mp3")
         this.load.audio('scrape',"./assets/80092__ayliffe__scrape-3.wav")
+        this.load.image('yore', './assets/test sprite.png')
     }
 
     create(){
@@ -105,7 +106,7 @@ class YoreLevel1 extends Phaser.Scene{
         let background= this.physics.add.image(this.sys.game.config.width / 2,this.sys.game.config.height / 2,'background');
         this.physics.world.setBounds(0,0,3000,3000);
 
-        this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"player").setScale(.1);
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"yore").setScale(.1);
         this.player.setCollideWorldBounds(true, 0, 0);
         
         this.target = new Phaser.Math.Vector2();
