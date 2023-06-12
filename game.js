@@ -16,7 +16,101 @@ class Intro extends Phaser.Scene {
     constructor() {
         super('intro')
     }
+
+    preload() {
+        this.load.image('background', './assets/Sprite-0002.png'); 
+        this.load.image('box', './assets/box.png');
+        this.load.audio('music',"./assets/Radwimps_-_Date.mp3");
+        this.load.audio('scrape',"./assets/80092__ayliffe__scrape-3.wav");
+        this.load.spritesheet('Yore', './assets/YoreSprite.png', {
+            frameWidth: 128, 
+            frameHeight: 128
+        });
+        this.load.image('base_tiles', './assets/base_tiles.png');  
+        this.load.spritesheet('Neo', './assets/NeoSprite.png', {
+            frameWidth: 128,
+            frameHeight: 128
+        });
+        this.load.tilemapTiledJSON('tilemap', './assets/testMap.json');
+        this.load.image('enterFull', './assets/enterFull.png');
+        this.load.image('exitFull', './assets/exitFull.png');
+        this.load.image('mute', './assets/Muted.png');
+        this.load.image('unmute', './assets/Unmuted.png');
+    }
+
     create() {
+        //Yore Sprites
+        this.anims.create({
+            key: 'idleYore',
+            frames: this.anims.generateFrameNumbers('Yore', {frames: [0, 1, 2, 3, 4]}),
+            frameRate: 5,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'walkLYore',
+            frames: this.anims.generateFrameNumbers('Yore', {frames: [30, 31, 32, 33, 34, 35, 36, 37, 38, 39]}),
+            frameRate: 10,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'walkRYore',
+            frames: this.anims.generateFrameNumbers('Yore', {frames: [40, 41, 42, 43, 44, 45, 46, 47, 48, 49]}),
+            frameRate: 10,
+            repeat: -1
+        })
+
+        this.anims.create({
+            key: 'walkDYore',
+            frames: this.anims.generateFrameNumbers('Yore', {frames: [20, 21, 22, 23, 24, 25]}),
+            frameRate: 6,
+            repeat: -1
+        })
+
+        this.anims.create({
+            key: 'walkUYore',
+            frames: this.anims.generateFrameNumbers('Yore', {frames: [10, 11, 12, 13, 14, 15]}),
+            frameRate: 6,
+            repeat: -1
+        })
+
+        // Neo sprites
+        this.anims.create({
+            key: 'idleNeo',
+            frames: this.anims.generateFrameNumbers('Neo', {frames: [0, 1, 2, 3, 4]}),
+            frameRate: 5,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'walkDNeo',
+            frames: this.anims.generateFrameNumbers('Neo', {frames: [10, 11, 12, 13, 14, 15]}),
+            frameRate: 6,
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'walkUNeo',
+            frames: this.anims.generateFrameNumbers('Neo', {frames: [20, 21, 22, 23, 24, 25]}),
+            frameRate: 6, 
+            repeat: -1
+        });
+
+        this.anims.create({
+            key: 'walkLNeo',
+            frames: this.anims.generateFrameNumbers('Neo', {frames: [30, 31, 32, 33, 34, 35, 36, 37]}),
+            frameRate: 8,
+            repeat: -1
+        })
+
+        this.anims.create({
+            key: 'walkRNeo',
+            frames: this.anims.generateFrameNumbers('Neo', {frames: [40, 41, 42, 43, 44, 45, 46, 47]}),
+            frameRate: 8,
+            repeat: -1
+        });
+
         let text=this.add.text(1920/2-250,540, "Click to start").setFontSize(60).setInteractive();
     
             text.on('pointerover', ()=> {
@@ -70,7 +164,7 @@ class Box extends Phaser.Physics.Arcade.Image {
 
         this.setCollideWorldBounds()
         this.setInteractive()
-        this.setBounce(0.5)
+        this.setBounce(0)
         this.setPushable(true)
         this.setVelocity(0)
         this.setDragX(1000)
@@ -83,72 +177,25 @@ class YoreLevel1 extends Phaser.Scene{
         super('yorelevel1')
     }
 
-    preload()
-    {
-        this.load.image('background', './assets/Sprite-0002.png');
-        this.load.image('player', './assets/test2.png');   
-        this.load.image('box', './assets/box.png');
-        this.load.audio('music',"./assets/Radwimps_-_Date.mp3")
-        this.load.audio('scrape',"./assets/80092__ayliffe__scrape-3.wav")
-        this.load.image('yore', './assets/test sprite.png')
-        this.load.spritesheet('animYore', './assets/YoreSpriteSheetTest.png', {
-            frameWidth: 128, 
-            frameHeight: 128
-        });
-    }
-
     create(){
-   
-        this.sound.add('music');
         this.boxSound = this.sound.add('scrape');
+
+        this.sound.add('music');
         this.sound.play('music');
+
         if ((localStorage.getItem('audioMute'))) {
             game.sound.setMute(true);
         }
         
-        let background= this.physics.add.image(this.sys.game.config.width / 2,this.sys.game.config.height / 2,'background');
+        this.physics.add.image(this.sys.game.config.width / 2,this.sys.game.config.height / 2,'background');
         this.physics.world.setBounds(0,0,3000,3000);
 
-        //Yore Sprites
-        this.anims.create({
-            key: 'idleYore',
-            frames: this.anims.generateFrameNumbers('animYore', {frames: [0, 1, 2, 3, 4]}),
-            frameRate: 5,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'walkLYore',
-            frames: this.anims.generateFrameNumbers('animYore', {frames: [10, 11, 12, 13, 14, 15, 16, 17, 18, 19]}),
-            frameRate: 10,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'walkRYore',
-            frames: this.anims.generateFrameNumbers('animYore', {frames: [20, 21, 22, 23, 24, 25, 26, 27, 28, 29]}),
-            frameRate: 10,
-            repeat: -1
-        })
-
-        this.anims.create({
-            key: 'walkUYore',
-            frames: this.anims.generateFrameNumbers('animYore', {frames: [30, 31, 32, 33, 34, 35]}),
-            frameRate: 6,
-            repeat: -1
-        })
-
-        this.anims.create({
-            key: 'walkDYore',
-            frames: this.anims.generateFrameNumbers('animYore', {frames: [40, 41, 42, 43, 44, 45]}),
-            frameRate: 6,
-            repeat: -1
-        })
-
-        this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"animYore");
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Yore");
         this.player.play('idleYore'); //play idle
         this.player.setCollideWorldBounds(true, 0, 0);
         this.player.body.setSize(75, 128);
+        this.player.setInteractive();
+        this.player.setImmovable(true);
         
         this.target = new Phaser.Math.Vector2();
         
@@ -164,17 +211,13 @@ class YoreLevel1 extends Phaser.Scene{
             this.playerAngle = this.physics.moveToObject(this.player, this.target, 200);
         });
 
-        //Block push
-        this.player.setInteractive();
-        
+        //Block push       
         this.testBlock = new Box(this, this.sys.game.config.width / 4, this.sys.game.config.height +100);
-
-        this.player.setImmovable(true);
 
         this.physics.add.collider(this.player, this.testBlock);
 
+        // launch heads-up-display
         this.scene.launch('hud');
-
     }
 
     update() {
@@ -188,6 +231,7 @@ class YoreLevel1 extends Phaser.Scene{
         if (this.player.body.speed > 0)
         {
             isMoving = true;
+
             if (distance < tolerance)
             {
                 this.player.body.reset(this.target.x, this.target.y);
@@ -208,6 +252,7 @@ class YoreLevel1 extends Phaser.Scene{
         }
         else{
             isMoving = false;
+
             if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'idleYore') {
                 this.player.play('idleYore');
             }
@@ -222,6 +267,7 @@ class YoreLevel1 extends Phaser.Scene{
 
         boxX = this.testBlock.x;
         boxY = this.testBlock.y;
+
         lightX=this.player.x;
         lightY=this.player.y;
     }
@@ -233,32 +279,16 @@ class NeoLevel1 extends Phaser.Scene {
         super('neolevel1');
     }
 
-    preload()
-    {
-        this.load.image('player', './assets/test2.png');
-        this.load.image('base_tiles', './assets/base_tiles.png');  
-        
-        this.load.tilemapTiledJSON('tilemap', './assets/testMap.json')
-    }
-
     create(){
         this.tempx=0;
         this.tempy=0;
 
         this.lights.enable().setAmbientColor(0x000000);
+        this.light = this.lights.addLight(180, 80, 200).setColor(0x00FFFF).setIntensity(1);
+
         const map = this.make.tilemap({key: 'tilemap'});
 
         const tileset = map.addTilesetImage('testTileset', 'base_tiles');
-        
-        this.light = this.lights.addLight(180, 80, 200).setColor(0x00FFFF).setIntensity(1);
-
-         /*this.input.on('pointermove', pointer =>
-         {
-
-            this.light.x=pointer.x;
-            this.light.y=pointer.y;
-
-         });*/
 
         this.groundLayer = map.createLayer('Tile Layer 1', tileset);
 
@@ -271,8 +301,12 @@ class NeoLevel1 extends Phaser.Scene {
 
         this.physics.world.setBounds(0,0,3000,3000);
 
-        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 50,this.sys.game.config.height / 2,"player").setScale(.1);
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 50,this.sys.game.config.height / 2,"Neo");
+        this.player.play('idleNeo');
         this.player.setCollideWorldBounds(true, 0, 0);
+        this.player.body.setSize(80, 128);
+        this.player.setInteractive();
+        this.player.setImmovable(true);
 
         this.physics.add.collider(this.player, this.solidLayer);
         
@@ -287,20 +321,18 @@ class NeoLevel1 extends Phaser.Scene {
             this.target = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
 
             //Move at 200 px/s:
-            this.physics.moveToObject(this.player, this.target, 200);
+            this.playerAngle = this.physics.moveToObject(this.player, this.target, 200);
         });
 
         //Block push
-        this.player.setInteractive();
-
         this.testBlock = new Box(this, boxX, boxY);
-
-        this.player.setImmovable(true);
 
         this.physics.add.collider(this.player, this.testBlock);
 
+        // launch heads-up-display
         this.scene.launch('hud');
 
+        // call wake() when awoken
         this.events.on(Phaser.Scenes.Events.WAKE, function () {
             this.wake();
         }, this);
@@ -313,6 +345,8 @@ class NeoLevel1 extends Phaser.Scene {
 
         const distance = Phaser.Math.Distance.BetweenPoints(this.player, this.target);
 
+        let angle = this.playerAngle * (180/Math.PI);
+
         if (this.player.body.speed > 0)
         {
             isMoving = true;
@@ -321,9 +355,26 @@ class NeoLevel1 extends Phaser.Scene {
             {
                 this.player.body.reset(this.target.x, this.target.y);
             }
+
+            if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkLNeo' && ((angle < -135 && angle >= -180) || (angle > 135 && angle <= 180))) {
+                this.player.play('walkLNeo');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkRNeo' && ((angle > -45 && angle <= 0) || (angle < 45 && angle >= 0))){
+                this.player.play('walkRNeo');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkDNeo' && ((angle <= 135 && angle >= 90) || (angle >= 45 && angle <= 90))){
+                this.player.play('walkDNeo');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkUNeo' && ((angle >= -135 && angle <= -90) || (angle <= -45 && angle >= -90))){
+                this.player.play('walkUNeo');
+            }
         }
         else{
             isMoving = false;
+
+            if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'idleNeo') {
+                this.player.play('idleNeo');
+            }
         }
     }
 
@@ -332,6 +383,7 @@ class NeoLevel1 extends Phaser.Scene {
         {
             this.testBlock.x = boxX;
             this.testBlock.y = boxY;
+
             this.tempx=boxX;
             this.tempy=boxY;
         }
@@ -388,8 +440,17 @@ class HUD extends Phaser.Scene {
 
     create(){
         this.swapButton = this.add.rectangle(150, 1000, 200, 75, 0xababab, 1).setInteractive();
-        this.muteButton = this.add.rectangle(500, 1000, 200, 75, 0xababab, 1).setInteractive();
-        this.fullButton = this.add.rectangle(1600, 1000, 200, 75, 0xababab, 1).setInteractive();
+        this.muteButton = this.add.image(1750,1020,'mute').setInteractive().setScale(0.8);
+        this.fullButton = this.add.image(1850, 1020, 'enterFull').setInteractive();
+
+        if (!(localStorage.getItem('audioMute'))) {
+            this.muteButton.setTexture('unmute')
+
+        }
+        else{
+            this.muteButton.setTexture('mute');
+        }
+
         this.swapButton.on('pointerdown', () =>
         {
             if (isMoving == false) {
@@ -422,16 +483,27 @@ class HUD extends Phaser.Scene {
 
             }
         });
+
         this.muteButton.on('pointerdown', () =>
         {
+            if (!(localStorage.getItem('audioMute'))) {
+                this.muteButton.setTexture('mute')
+
+            }
+            else{
+                this.muteButton.setTexture('unmute');
+            }
             console.log('hello');
             toggleAudio();
         });
+
         this.fullButton.on('pointerdown', () => {
             if (this.scale.isFullscreen) {
                 this.scale.stopFullscreen();
+                this.fullButton.setTexture('enterFull');
             } else {
                 this.scale.startFullscreen();
+                this.fullButton.setTexture('exitFull');
             }
         });
     }
@@ -447,7 +519,6 @@ function toggleAudio()
     localStorage.setItem('audioMute','mute');
     game.sound.setMute(!game.sound.mute);
     }
-
 }
 
 const game = new Phaser.Game({
