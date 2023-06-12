@@ -13,6 +13,7 @@ Prototype notes:
 
 - Core gameplay:
     * For progression, it is mapped stage by stage in levels until you reach the end, but progression between scenes is dictated by a swapping mechanic in which players can do something in one scene that alters the level of the other scene allowing the player to progress through the levels and eventually move to the next stage.
+    * The 2nd prefab besides our Box is our use of the .json files in our assets folder. We created our maps outside of phaser with another level editor tool and since the prefab requirement does say that .json data files count, I believe that our map json files should meet the requirement to be our 2nd prefab type
 
 - Cinematics:
     * For the non-interactive cinematic, the beginning is the studio logo fading into view, the middle is the "blinking" effect, and the end is the logo fading into black.
