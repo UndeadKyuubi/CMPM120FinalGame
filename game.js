@@ -21,7 +21,8 @@ class Intro extends Phaser.Scene {
         this.load.image('background', './assets/Sprite-0002.png'); 
         this.load.image('box', './assets/box.png');
         this.load.audio('music',"./assets/Radwimps_-_Date.mp3");
-        this.load.audio('scrape',"./assets/80092__ayliffe__scrape-3.wav");
+        this.load.audio('scrape',"./assets/blockSlide3.mp3");
+        this.load.audio('switch',"./assets/pressurePlate2.mp3")
         this.load.spritesheet('Yore', './assets/YoreSprite.png', {
             frameWidth: 128, 
             frameHeight: 128
@@ -36,6 +37,8 @@ class Intro extends Phaser.Scene {
         this.load.image('exitFull', './assets/exitFull.png');
         this.load.image('mute', './assets/Muted.png');
         this.load.image('unmute', './assets/Unmuted.png');
+        this.load.tilemapTiledJSON('testLevel1', './assets/testLevel1.json');
+        this.load.image('proto_tiles', './assets/protoTiles.png');  
     }
 
     create() {
@@ -187,8 +190,29 @@ class YoreLevel1 extends Phaser.Scene{
             game.sound.setMute(true);
         }
         
-        this.physics.add.image(this.sys.game.config.width / 2,this.sys.game.config.height / 2,'background');
-        this.physics.world.setBounds(0,0,3000,3000);
+        //this.physics.add.image(this.sys.game.config.width / 2,this.sys.game.config.height / 2,'background');
+
+        const map = this.make.tilemap({key: 'testLevel1'});
+
+        const tileset = map.addTilesetImage('protoTiles', 'proto_tiles');
+
+        this.groundLayer = map.createLayer('Ground', tileset);
+        this.platformLayer = map.createLayer('Platforms', tileset);
+        this.yoreLayer = map.createLayer('YoreOnly', tileset);
+        this.switchesLayer = map.createLayer('Switches', tileset);
+        this.goalLayer = map.createLayer('Goal', tileset);
+
+        this.groundLayer.setCollisionByProperty({collides: true});
+        this.mapButton = this.add.rectangle(550, 1000, 200, 75, 0xababab, 1).setInteractive();
+        this.sound.add('switch');
+        this.mapButton.on('pointerdown', () =>
+        { 
+            this.groundLayer.setVisible(false);
+            this.groundLayer.setCollisionByProperty({collides: false});
+            this.cameras.main.shake(500,.005);
+            this.sound.play('switch');
+            
+        });
 
         this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Yore");
         this.player.play('idleYore'); //play idle
@@ -196,6 +220,8 @@ class YoreLevel1 extends Phaser.Scene{
         this.player.body.setSize(75, 128);
         this.player.setInteractive();
         this.player.setImmovable(true);
+
+        this.physics.add.collider(this.player, this.groundLayer);
         
         this.target = new Phaser.Math.Vector2();
         
@@ -284,7 +310,7 @@ class NeoLevel1 extends Phaser.Scene {
         this.tempy=0;
 
         this.lights.enable().setAmbientColor(0x000000);
-        this.light = this.lights.addLight(180, 80, 200).setColor(0x00FFFF).setIntensity(1);
+        this.light = this.lights.addLight(180, 80, 128*4).setColor(0x00FFFF).setIntensity(1);
 
         const map = this.make.tilemap({key: 'tilemap'});
 
@@ -294,12 +320,11 @@ class NeoLevel1 extends Phaser.Scene {
 
         this.solidLayer = map.createLayer('Tile Layer 2', tileset);
         this.solidLayer.setCollisionByProperty({collides: true});
+        this.solidLayer.setVisible(false);
         //this.solidLayer.renderDebug(this.add.graphics());
 
         this.groundLayer.setPipeline("Light2D");
         this.solidLayer.setPipeline("Light2D");
-
-        this.physics.world.setBounds(0,0,3000,3000);
 
         this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 50,this.sys.game.config.height / 2,"Neo");
         this.player.play('idleNeo');
