@@ -1031,6 +1031,8 @@ class HUD extends Phaser.Scene {
 
         this.muteButton.on('pointerdown', () =>
         {
+            this.muteButton.setTint(0x2c2c2c)
+
             if ((localStorage.getItem('audioMute'))) {
                 this.muteButton.setTexture('unmute')
                 localStorage.removeItem('audioMute');
@@ -1045,6 +1047,10 @@ class HUD extends Phaser.Scene {
             
         });
 
+        this.muteButton.on('pointerup', () => {
+            this.muteButton.clearTint()
+        });
+
         this.fullButton.on('pointerdown', () => {
             if (this.scale.isFullscreen) {
                 this.scale.stopFullscreen();
@@ -1057,6 +1063,8 @@ class HUD extends Phaser.Scene {
 
         this.resetButton.on('pointerdown', () =>
         {
+            this.resetButton.setTint(0x2c2c2c)
+
             let pastScene = this.scene.get(past);
             let futScene = this.scene.get(future);
  
@@ -1065,6 +1073,10 @@ class HUD extends Phaser.Scene {
             currScene = 'past';
             swapPast = 0;
             swapFuture = 0;
+        });
+
+        this.resetButton.on('pointerup', () => {
+            this.resetButton.clearTint()
         });
     }
 }
