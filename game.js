@@ -13,6 +13,9 @@ let past = 'yorelevel1';
 let future = 'neolevel1';
 
 let hudLoaded = false;
+let musicPlaying = false;
+
+// Main Menu
 
 class Intro extends Phaser.Scene {
     constructor() {
@@ -21,7 +24,7 @@ class Intro extends Phaser.Scene {
 
     preload() {
         this.load.image('box', './assets/box.png');
-        this.load.audio('music',"./assets/Radwimps_-_Date.mp3");
+        this.load.audio('music',"./assets/LullabyforwerwolvesLofi_original_no_steal_mix_.mp3");
         this.load.audio('scrape',"./assets/blockSlide3.mp3");
         this.load.audio('switch',"./assets/pressurePlate2.mp3")
         this.load.spritesheet('Yore', './assets/YoreSprite.png', {
@@ -39,7 +42,8 @@ class Intro extends Phaser.Scene {
         this.load.image('mute', './assets/Muted.png');
         this.load.image('unmute', './assets/Unmuted.png');
         this.load.tilemapTiledJSON('testLevel1', './assets/testLevel1.json');
-        this.load.image('proto_tiles', './assets/protoTiles.png');  
+        this.load.image('proto_tiles', './assets/protoTiles.png');
+        this.load.tilemapTiledJSON('testLevel3', './assets/testLevel3.tmj')  
     }
 
     create() {
@@ -320,6 +324,7 @@ class NeoLevel1 extends Phaser.Scene {
     create(){
         this.tempx=0;
         this.tempy=0;
+        this.boxSound=this.sound.add('scrape');
 
         const map = this.make.tilemap({key: 'testLevel1'});
 
@@ -414,6 +419,13 @@ class NeoLevel1 extends Phaser.Scene {
 
         lightX=this.player.x;
         lightY=this.player.y;
+        
+        if (this.testBlock.body.speed > 0) {
+            if(!this.boxSound.isPlaying)
+            {
+            this.boxSound.play();    
+            }  
+        }
     }
 
     wake() {
@@ -478,8 +490,13 @@ class HUD extends Phaser.Scene {
         this.muteButton = this.add.image(1750,1020,'mute').setInteractive().setScale(0.8);
         this.fullButton = this.add.image(1850, 1020, 'enterFull').setInteractive();
         this.resetButton = this.add.rectangle(600, 1000, 200, 75, 0xababab, 1).setInteractive();
+
         let theMusic=this.sound.add('music');
-        theMusic.play();
+
+        if (musicPlaying == false) {
+            theMusic.play();
+            musicPlaying = true;
+        }
 
         if ((localStorage.getItem('audioMute'))) {
             theMusic.setMute(!theMusic.mute);
@@ -487,10 +504,12 @@ class HUD extends Phaser.Scene {
 
         if (!(localStorage.getItem('audioMute'))) {
             this.muteButton.setTexture('unmute')
+            musicPlaying = true;
 
         }
         else{
             this.muteButton.setTexture('mute');
+            musicPlaying = false;
         }
 
         this.swapButton.on('pointerdown', () =>
@@ -554,32 +573,17 @@ class HUD extends Phaser.Scene {
 
         this.resetButton.on('pointerdown', () =>
         {
-            if (currScene == 'past') {
-                theMusic.stop();
-                let otherScene = this.scene.get(past);
-                otherScene.scene.restart();
-            }
-            else {
-                theMusic.stop();
-                let otherScene = this.scene.get(future);
-                otherScene.scene.restart();
-            }
-            hudLoaded = false;
+            let pastScene = this.scene.get(past);
+            let futScene = this.scene.get(future);
+ 
+            futScene.scene.start(pastScene);
+
+            currScene = 'past';
+            swapPast = 0;
+            swapFuture = 0;
         });
     }
 }
-
-// function toggleAudio()
-// {
-//     if (localStorage.getItem('audioMute')) {
-        
-//         game.sound.setMute(!game.sound.mute);
-//     }
-//     else{
-//     localStorage.setItem('audioMute','mute');
-//     game.sound.setMute(!game.sound.mute);
-//     }
-// }
 
 const game = new Phaser.Game({
     scale: {
