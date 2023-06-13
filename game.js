@@ -958,7 +958,7 @@ class HUD extends Phaser.Scene {
     create(){
         this.swapButton = this.add.image(100, 1000, 'clock').setInteractive().setScale(0.8);
         this.muteButton = this.add.image(1750,1000,'mute').setInteractive().setScale(0.8);
-        this.fullButton = this.add.image(1850, 1000, 'enterFull').setInteractive();
+        this.fullButton = this.add.image(1850, 1005, 'enterFull').setInteractive().setScale(0.5);
         this.resetButton = this.add.image(1650, 1000, 'reset').setInteractive().setScale(0.8);
 
         let theMusic=this.sound.add('music');
@@ -1034,10 +1034,10 @@ class HUD extends Phaser.Scene {
         this.fullButton.on('pointerdown', () => {
             if (this.scale.isFullscreen) {
                 this.scale.stopFullscreen();
-                this.fullButton.setTexture('enterFull');
+                this.fullButton.setTexture('enterFull').setScale(0.5);
             } else {
                 this.scale.startFullscreen();
-                this.fullButton.setTexture('exitFull');
+                this.fullButton.setTexture('exitFull').setScale(0.8);
             }
         });
 
