@@ -25,7 +25,8 @@ class MainMenu extends Phaser.Scene {
     preload() {
         this.load.image('titleBackground', '/assets/testTitleBackground.jpg');
         //this.load.image('title', './assets/testTitle.jpg');
-        this.load.image('box', './assets/box.png');
+        this.load.image('cubePast', './assets/cubePast.png');
+        this.load.image('cubeFuture', './assets/cubeFuture.png');
         this.load.audio('music',"./assets/LullabyforwerwolvesLofi_original_no_steal_mix_.mp3");
         this.load.audio('scrape',"./assets/blockSlide3.mp3");
         this.load.audio('switch',"./assets/pressurePlate2.mp3")
@@ -47,16 +48,37 @@ class MainMenu extends Phaser.Scene {
         this.load.image('exitFull', './assets/exitFull.png');
         this.load.image('mute', './assets/Muted.png');
         this.load.image('unmute', './assets/Unmuted.png');
-        this.load.tilemapTiledJSON('testLevel1', './assets/testLevel1.json');
-        this.load.image('proto_tiles', './assets/protoTiles.png');
-        this.load.tilemapTiledJSON('testLevel3', './assets/testLevel3.tmj')  
+        this.load.tilemapTiledJSON('yoremap1', './assets/yoremap1.json');
+        this.load.tilemapTiledJSON('neomap1', './assets/neomap1.json');
+        this.load.image('yore-tiles', './assets/yoreTiles.png'); 
+        this.load.image('neo-tiles', './assets/neoTiles.png');
         this.load.image('reset', './assets/reset.png');
         this.load.image('clock', './assets/clock.png');
         this.load.image('clockPressed', './assets/clockPressed.png');
         this.load.audio('timer','./assets/tick.mp3');
+        this.load.video('logo', './assets/Studio_Animation.mp4');
     }
 
     create() {
+        // Testing logo animation
+        
+        // this.cameras.main.fadeIn(1000, 0,0,0);
+
+        // const studio = this.add.video(1920*.5, 1080*.5, 'logo');
+        
+        // studio.on('locked', () => {
+        //     let message = this.add.text(1920*5, 1080*5, 'Click to play video');
+        //     studio.on('unlocked', () => {
+        //         message.destroy();
+        //     });
+        // });
+        
+        // studio.play();
+
+        // this.time.delayedCall(10000, ()=> {
+        //     this.cameras.main.fadeOut(1000, 0, 0, 0);
+        // });
+        
         this.cameras.main.fadeIn(750, 0, 0, 0);
 
         let background = this.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2, 'titleBackground');
@@ -289,7 +311,7 @@ class Credits extends Phaser.Scene {
 }
 
 class Box extends Phaser.Physics.Arcade.Image {
-    constructor(scene, x=0, y=0, texture='box'){
+    constructor(scene, x=0, y=0, texture='cubePast'){
         super(scene, x, y, texture)
 
         scene.add.existing(this);
@@ -301,6 +323,7 @@ class Box extends Phaser.Physics.Arcade.Image {
         this.setVelocity(0)
         this.setDragX(1000)
         this.setDragY(1000)
+        this.setScale(0.5)
     }
 }
 
@@ -314,47 +337,42 @@ class YoreLevel1 extends Phaser.Scene{
         this.boxSound = this.sound.add('scrape');
         //this.timer.loop=true;
 
-        this.lights.enable().setAmbientColor(0x000000);
-        this.light = this.lights.addLight(this.sys.game.config.width / 2,this.sys.game.config.height / 2, 128*4).setColor(0x00FFFF).setIntensity(1);
+        const map = this.make.tilemap({key: 'yoremap1'});
 
-        const map = this.make.tilemap({key: 'testLevel1'});
-
-        const tileset = map.addTilesetImage('protoTiles', 'proto_tiles');
+        const tileset = map.addTilesetImage('yoreTiles', 'yore-tiles');
 
         this.groundLayer = map.createLayer('Ground', tileset);
         this.platformLayer = map.createLayer('Platforms', tileset);
+        this.boxLayer = map.createLayer('BoxOnly', tileset).setVisible(false);
+        this.fakePlats = map.createLayer('FalsePlatforms', tileset);
         this.yoreLayer = map.createLayer('YoreOnly', tileset);
-        this.switchesLayer = map.createLayer('Switches', tileset);
-        this.goalLayer = map.createLayer('Goal', tileset);
+        this.treeLayer = map.createLayer('Trees', tileset).setDepth(1);
 
         this.groundLayer.setCollisionByProperty({collides: true});
-
-        this.groundLayer.setPipeline("Light2D");
-        this.platformLayer.setPipeline("Light2D");
-        this.yoreLayer.setPipeline("Light2D");
-        this.switchesLayer.setPipeline("Light2D");
-        this.goalLayer.setPipeline("Light2D");
+        this.platformLayer.setCollisionByProperty({collides: true});
+        this.boxLayer.setCollisionByProperty({collides: true});
+        this.yoreLayer.setCollisionByProperty({collides: true});
+        this.treeLayer.setCollisionByProperty({collides: true});
 
         const sscene=this.scene.get('hud');
         sscene.events.on('solved',function(){
             console.log('pongis');
         },this);
-        
-        
 
-        this.neoImage = this.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Neo").setAlpha(0.5);
-        this.neoImage.play('idleNeo');
-
-        this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Yore");
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 1300,this.sys.game.config.height / 2 + 2200,"Yore");
         this.player.play('idleYore'); //play idle
         this.player.body.setSize(75, 128);
         this.player.setInteractive();
         this.player.setImmovable(true);
 
         this.physics.add.collider(this.player, this.groundLayer);
+        this.physics.add.collider(this.player, this.platformLayer);
+        this.physics.add.collider(this.player, this.boxLayer);
+        this.physics.add.collider(this.player, this.yoreLayer);
+        this.physics.add.collider(this.player, this.treeLayer);
 
         //crystal
-        const timeSprite = this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2 + 250, 'crystal').play('goal');
+        const timeSprite = this.physics.add.sprite(this.sys.game.config.width / 2 + 760,this.sys.game.config.height / 2 + 50, 'crystal').play('goal');
 
         this.physics.add.collider(this.player, timeSprite, () => {
             let futureScene = this.scene.get(future);
@@ -377,10 +395,14 @@ class YoreLevel1 extends Phaser.Scene{
         });
 
         //Block push       
-        this.testBlock = new Box(this, this.sys.game.config.width / 3, this.sys.game.config.height +100);
+        this.testBlock = new Box(this, this.sys.game.config.width / 2 + 760,this.sys.game.config.height / 2 + 2500);
 
         this.physics.add.collider(this.player, this.testBlock);
         this.physics.add.collider(this.testBlock, this.groundLayer);
+        this.physics.add.collider(this.testBlock, this.platformLayer);
+        this.physics.add.collider(this.testBlock, this.boxLayer);
+        this.physics.add.collider(this.testBlock, this.yoreLayer);
+        this.physics.add.collider(this.testBlock, this.treeLayer);
 
         // launch heads-up-display
         if (hudLoaded == false) {
@@ -451,11 +473,6 @@ class YoreLevel1 extends Phaser.Scene{
    
 
     wake() {
-        this.light.x=lightX;
-        this.light.y=lightY;
-
-        this.neoImage.x = lightX;
-        this.neoImage.y = lightY;
     }
 
 
@@ -477,26 +494,31 @@ class NeoLevel1 extends Phaser.Scene {
         this.tempy=0;
         this.boxSound=this.sound.add('scrape');
 
-        const map = this.make.tilemap({key: 'testLevel1'});
+        const map = this.make.tilemap({key: 'neomap1'});
 
-        const tileset = map.addTilesetImage('protoTiles', 'proto_tiles');
+        const tileset = map.addTilesetImage('neoTiles', 'neo-tiles');
 
-        this.groundLayer = map.createLayer('Ground', tileset);
-        this.platformLayer = map.createLayer('Platforms', tileset);
-        this.neoLayer = map.createLayer('NeoOnly', tileset);
-        this.switchesLayer = map.createLayer('Switches', tileset);
-        this.goalLayer = map.createLayer('Goal', tileset);
+        this.groundLayer = map.createLayer('NeoGround', tileset);
+        this.falsePlatforms = map.createLayer('neoFalsePlatforms', tileset);
+        this.platformLayer = map.createLayer('neoPlatforms', tileset);
+        this.neoLayer = map.createLayer('neoOnly', tileset);
+        this.boxLayer = map.createLayer('neoBoxOnly', tileset);
+        this.treeLayer = map.createLayer('neoTrees', tileset);
 
         this.groundLayer.setCollisionByProperty({collides: true});
+        this.platformLayer.setCollisionByProperty({collides: true});
+        this.neoLayer.setCollisionByProperty({collides: true});
+        this.boxLayer.setCollisionByProperty({collides: true});
+        this.treeLayer.setCollisionByProperty({collides: true});
         //this.solidLayer.renderDebug(this.add.graphics());
 
-        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 50,this.sys.game.config.height / 2,"Neo");
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 1300,this.sys.game.config.height / 2 + 2500,"Neo");
         this.player.play('idleNeo');
         this.player.body.setSize(80, 128);
         this.player.setInteractive();
         this.player.setImmovable(true);
 
-        const timeSprite = this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2 + 250, 'crystal').play('goal');
+        const timeSprite = this.physics.add.sprite(this.sys.game.config.width / 2 + 760,this.sys.game.config.height / 2 + 50, 'crystal').play('goal');
 
         this.physics.add.collider(this.player, timeSprite, () => {
             let pastScene = this.scene.get(past);
@@ -505,6 +527,10 @@ class NeoLevel1 extends Phaser.Scene {
         })
         
         this.physics.add.collider(this.player, this.groundLayer);
+        this.physics.add.collider(this.player, this.platformLayer);
+        this.physics.add.collider(this.player, this.neoLayer);
+        this.physics.add.collider(this.player, this.boxLayer);
+        this.physics.add.collider(this.player, this.treeLayer);
         
         this.target = new Phaser.Math.Vector2();
         
@@ -522,7 +548,12 @@ class NeoLevel1 extends Phaser.Scene {
 
         //Block push
         this.testBlock = new Box(this, boxX, boxY);
+        this.testBlock.setTexture('cubeFuture');
         this.physics.add.collider(this.testBlock, this.groundLayer);
+        this.physics.add.collider(this.testBlock, this.platformLayer);
+        this.physics.add.collider(this.testBlock, this.neoLayer);
+        this.physics.add.collider(this.testBlock, this.boxLayer);
+        this.physics.add.collider(this.testBlock, this.treeLayer);
 
         this.physics.add.collider(this.player, this.testBlock);
 
@@ -619,6 +650,17 @@ class YoreLevel2 extends Phaser.Scene {
         swapPast = 0;
         swapFuture = 0;
 
+        this.lights.enable().setAmbientColor(0x000000);
+        this.light = this.lights.addLight(this.sys.game.config.width / 2,this.sys.game.config.height / 2, 128*4).setColor(0x00FFFF).setIntensity(1);
+
+        this.groundLayer.setPipeline("Light2D");
+        this.platformLayer.setPipeline("Light2D");
+        this.yoreLayer.setPipeline("Light2D");
+        this.treeLayer.setPipeline("Light2D");
+
+        this.neoImage = this.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Neo").setAlpha(0.5);
+        this.neoImage.play('idleNeo');
+
         this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Yore");
         this.player.play('idleYore'); //play idle
         this.player.body.setSize(75, 128);
@@ -699,7 +741,11 @@ class YoreLevel2 extends Phaser.Scene {
     }
 
     wake() {
+        this.light.x=lightX;
+        this.light.y=lightY;
 
+        this.neoImage.x = lightX;
+        this.neoImage.y = lightY;
     }
 }
 

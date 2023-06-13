@@ -24,73 +24,82 @@ class Loading extends Phaser.Scene {
         };
         this.load.rexWebFont(config);
         this.load.path = './assets/';
-        //this.load.image('logo', 'logo.jpg');
-        this.load.image('dot', 'dot_logo.jpg');
-        this.load.image('logo', 'edit_logo.jpg');
+        this.load.video('logo', 'Studio_Animation.mp4');
+        // this.load.image('dot', 'dot_logo.jpg');
+        // this.load.image('logo', 'edit_logo.jpg');
      }
 
     create() {
         this.cameras.main.fadeIn(1000, 0,0,0);
 
-        let logo = this.add.image(w *.5, h *.5, 'logo')
-        .setScale(.75)
-        .setAlpha(0);
+        studio = this.add.video(1920*.5, 1080*.5, 'logo');
+        studio.play;
 
-        let dot_logo = this.add.image(w*.5, h*.5, 'dot')
-        .setScale(.75)
-        .setAlpha(0);
+        this.time.delayedCall(4000, ()=> {
+            this.cameras.main.fadeOut(1000, 0, 0, 0);
+        });
+        this.time.delayedCall(5000, ()=> this.scene.start('menu'));
 
-        this.time.delayedCall(1001, () => {
-            this.add.tween({
-                targets: logo,
-                alpha: {from: 0, to: 1},
-                duration: 1000
-            });
-        })
 
-        this.time.delayedCall(1001, () => {
-            const chain = this.tweens.chain({
-                targets: dot_logo,
-                tweens: [
-                    {
-                        alpha: {from: 0, to: 1},
-                        duration: 1000
-                    },
-                    {
-                        alpha: {from: 1, to: 0},
-                        delay: 500,
-                        duration: 0
-                    },
-                    {
-                        alpha: {from: 0, to: 1},
-                        delay: 500,
-                        duration: 0
-                    },
-                    {
-                        alpha: {from: 1, to: 0},
-                        delay: 500,
-                        duration: 0
-                    },
-                    {
-                        alpha: {from: 0, to: 1},
-                        delay: 500,
-                        duration: 0
-                    },
-                ]
-            });
-        })
+        // let logo = this.add.image(w *.5, h *.5, 'logo')
+        // .setScale(.75)
+        // .setAlpha(0);
 
-        let blackbox = this.add.rectangle(0, 0, 1920, 1080, 0x000000).setOrigin(0,0).setAlpha(0);
-        this.time.delayedCall(4000, () =>{
-            let transition = this.add.tween({
-                targets: blackbox,
-                alpha: {from: 0, to: 1},
-                duration: 2000
-            });
-            transition.on('complete', () =>{
-                this.scene.start('menu');
-            })
-        })     
+        // let dot_logo = this.add.image(w*.5, h*.5, 'dot')
+        // .setScale(.75)
+        // .setAlpha(0);
+
+        // this.time.delayedCall(1001, () => {
+        //     this.add.tween({
+        //         targets: logo,
+        //         alpha: {from: 0, to: 1},
+        //         duration: 1000
+        //     });
+        // })
+
+        // this.time.delayedCall(1001, () => {
+        //     const chain = this.tweens.chain({
+        //         targets: dot_logo,
+        //         tweens: [
+        //             {
+        //                 alpha: {from: 0, to: 1},
+        //                 duration: 1000
+        //             },
+        //             {
+        //                 alpha: {from: 1, to: 0},
+        //                 delay: 500,
+        //                 duration: 0
+        //             },
+        //             {
+        //                 alpha: {from: 0, to: 1},
+        //                 delay: 500,
+        //                 duration: 0
+        //             },
+        //             {
+        //                 alpha: {from: 1, to: 0},
+        //                 delay: 500,
+        //                 duration: 0
+        //             },
+        //             {
+        //                 alpha: {from: 0, to: 1},
+        //                 delay: 500,
+        //                 duration: 0
+        //             },
+        //         ]
+        //     });
+        // })
+
+        // let blackbox = this.add.rectangle(0, 0, 1920, 1080, 0x000000).setOrigin(0,0).setAlpha(0);
+        // this.time.delayedCall(4000, () =>{
+        //     let transition = this.add.tween({
+        //         targets: blackbox,
+        //         alpha: {from: 0, to: 1},
+        //         duration: 2000
+        //     });
+        //     transition.on('complete', () =>{
+        //         this.scene.start('menu');
+        //     })
+        // })     
     }
 }
 
