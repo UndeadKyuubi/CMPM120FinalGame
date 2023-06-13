@@ -958,7 +958,8 @@ class HUD extends Phaser.Scene {
     create(){
         this.swapButton = this.add.image(100, 1000, 'clock').setInteractive().setScale(0.8);
         this.muteButton = this.add.image(1750,1000,'mute').setInteractive().setScale(0.8);
-        this.fullButton = this.add.image(1850, 1005, 'enterFull').setInteractive().setScale(0.5);
+        this.fullButton = this.add.image(1850, 1005
+            , 'enterFull').setInteractive().setScale(0.5);
         this.resetButton = this.add.image(1650, 1000, 'reset').setInteractive().setScale(0.8);
 
         let theMusic=this.sound.add('music');
