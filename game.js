@@ -43,6 +43,7 @@ class Intro extends Phaser.Scene {
         this.load.image('proto_tiles', './assets/protoTiles.png');
         this.load.tilemapTiledJSON('testLevel3', './assets/testLevel3.tmj')  
         this.load.image('reset', './assets/reset.png');
+        this.load.image('clock', './assets/clock.png');
     }
 
     create() {
@@ -955,10 +956,10 @@ class HUD extends Phaser.Scene {
     }
 
     create(){
-        this.swapButton = this.add.rectangle(150, 1000, 200, 75, 0xababab, 1).setInteractive();
-        this.muteButton = this.add.image(1750,1020,'mute').setInteractive().setScale(0.8);
-        this.fullButton = this.add.image(1850, 1020, 'enterFull').setInteractive();
-        this.resetButton = this.add.image(400, 1000, 'reset').setInteractive().setScale(0.8);
+        this.swapButton = this.add.image(100, 1000, 'clock').setInteractive().setScale(0.8);
+        this.muteButton = this.add.image(1750,1000,'mute').setInteractive().setScale(0.8);
+        this.fullButton = this.add.image(1850, 1000, 'enterFull').setInteractive();
+        this.resetButton = this.add.image(1650, 1000, 'reset').setInteractive().setScale(0.8);
 
         let theMusic=this.sound.add('music');
 
