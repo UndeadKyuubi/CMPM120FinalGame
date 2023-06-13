@@ -17,6 +17,66 @@ let musicPlaying = false;
 
 let animsLoaded = false;
 
+//Loading
+class Loading extends Phaser.Scene{
+    constructor(){
+        super('loading')
+    }
+    preload(){
+        // progress bar
+        const progress = this.add.graphics();
+        this.add.text(920, 450, 'Loading...');
+        progress.fillStyle(0x222222, 0.8);
+        progress.fillRect(815, 470, 320, 50);
+
+        this.load.on('progress', value => {
+            progress.clear();
+            progress.fillStyle(0xffffff, 1);
+            progress.fillRect(815, 480, 300 * value, 30);
+        });
+
+        this.load.on('complete', () => {
+            this.add.text(895, 530, 'Click to begin');
+         });
+
+        this.load.video('logo', './assets/Studio_Animation.mp4');
+    }
+    create(){
+        this.add.text(0, 0, 'Loading...');
+        this.input.on('pointerdown', ()=> this.scene.start('intro'));
+
+        
+    }
+}
+
+//Studio Logo
+class Intro extends Phaser.Scene{
+    constructor(){
+        super('intro')
+    }
+    create(){
+        // Testing logo animation
+        
+        this.cameras.main.fadeIn(1000, 0,0,0);
+
+        const studio = this.add.video(1920*.5, 1080*.5, 'logo');
+        
+        studio.on('locked', () => {
+            let message = this.add.text(1920*5, 1080*5, 'Click to play video');
+            studio.on('unlocked', () => {
+                message.destroy();
+            });
+        });
+        
+        this.time.delayedCall(1000, ()=> studio.play());
+
+        this.time.delayedCall(4000, ()=> {
+            this.cameras.main.fadeOut(1000, 0, 0, 0);
+            this.scene.start('mainMenu');
+        });
+    }
+}
+
 //Main Menu
 class MainMenu extends Phaser.Scene {
     constructor() {
@@ -60,25 +120,6 @@ class MainMenu extends Phaser.Scene {
     }
 
     create() {
-        // Testing logo animation
-        
-        // this.cameras.main.fadeIn(1000, 0,0,0);
-
-        // const studio = this.add.video(1920*.5, 1080*.5, 'logo');
-        
-        // studio.on('locked', () => {
-        //     let message = this.add.text(1920*5, 1080*5, 'Click to play video');
-        //     studio.on('unlocked', () => {
-        //         message.destroy();
-        //     });
-        // });
-        
-        // studio.play();
-
-        // this.time.delayedCall(10000, ()=> {
-        //     this.cameras.main.fadeOut(1000, 0, 0, 0);
-        // });
-        
         this.cameras.main.fadeIn(750, 0, 0, 0);
 
         let background = this.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2, 'titleBackground');
@@ -1397,6 +1438,6 @@ const game = new Phaser.Game({
             gravity: { y: 0}
         }
     },
-    scene: [MainMenu, Credits, YoreLevel1, NeoLevel1, YoreLevel2, NeoLevel2, YoreLevel3, NeoLevel3, YoreLevel4, NeoLevel4, HUD, EndScene],
+    scene: [Loading, Intro, MainMenu, Credits, YoreLevel1, NeoLevel1, YoreLevel2, NeoLevel2, YoreLevel3, NeoLevel3, YoreLevel4, NeoLevel4, HUD, EndScene],
     title: "Final Game",
 });
