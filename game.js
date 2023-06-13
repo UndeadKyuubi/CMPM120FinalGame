@@ -44,6 +44,7 @@ class Intro extends Phaser.Scene {
         this.load.tilemapTiledJSON('testLevel3', './assets/testLevel3.tmj')  
         this.load.image('reset', './assets/reset.png');
         this.load.image('clock', './assets/clock.png');
+        this.load.image('clockPressed', './assets/clockPressed.png');
     }
 
     create() {
@@ -985,6 +986,8 @@ class HUD extends Phaser.Scene {
 
         this.swapButton.on('pointerdown', () =>
         {
+            this.swapButton.setTexture('clockPressed')
+
             if (isMoving == false) {
                 console.log("swapped");
 
@@ -1014,6 +1017,10 @@ class HUD extends Phaser.Scene {
                 }
 
             }
+        });
+
+        this.swapButton.on('pointerup', () => {
+            this.swapButton.setTexture('clock')
         });
 
         this.muteButton.on('pointerdown', () =>
