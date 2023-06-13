@@ -15,14 +15,14 @@ let future = 'neolevel1';
 let hudLoaded = false;
 let musicPlaying = false;
 
-// Main Menu
-
-class Intro extends Phaser.Scene {
+//Main Menu
+class MainMenu extends Phaser.Scene {
     constructor() {
-        super('intro')
+        super('mainMenu')
     }
-
     preload() {
+        this.load.image('titleBackground', '/assets/testTitleBackground.jpg');
+        //this.load.image('title', './assets/testTitle.jpg');
         this.load.image('box', './assets/box.png');
         this.load.audio('music',"./assets/LullabyforwerwolvesLofi_original_no_steal_mix_.mp3");
         this.load.audio('scrape',"./assets/blockSlide3.mp3");
@@ -34,6 +34,12 @@ class Intro extends Phaser.Scene {
         this.load.spritesheet('Neo', './assets/NeoSprite.png', {
             frameWidth: 128,
             frameHeight: 128
+        });
+        this.load.spritesheet('crystal', './assets/crystal.png', {
+            frameWidth: 128, 
+            frameHeight: 128,
+            startFrame: 0,
+            endFrame: 3
         });
         this.load.image('enterFull', './assets/enterFull.png');
         this.load.image('exitFull', './assets/exitFull.png');
@@ -48,120 +54,231 @@ class Intro extends Phaser.Scene {
     }
 
     create() {
-        //Yore Sprites
-        this.anims.create({
-            key: 'idleYore',
-            frames: this.anims.generateFrameNumbers('Yore', {frames: [0, 1, 2, 3, 4]}),
-            frameRate: 5,
-            repeat: -1
-        });
+        this.cameras.main.fadeIn(750, 0, 0, 0);
 
-        this.anims.create({
-            key: 'walkLYore',
-            frames: this.anims.generateFrameNumbers('Yore', {frames: [30, 31, 32, 33, 34, 35, 36, 37, 38, 39]}),
-            frameRate: 10,
-            repeat: -1
-        });
+        let background = this.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2, 'titleBackground');
 
-        this.anims.create({
-            key: 'walkRYore',
-            frames: this.anims.generateFrameNumbers('Yore', {frames: [40, 41, 42, 43, 44, 45, 46, 47, 48, 49]}),
-            frameRate: 10,
-            repeat: -1
-        })
+        //let title = this.add.image((config.width / 2) - 800, (config.height / 2) + 200, 'title');
 
-        this.anims.create({
-            key: 'walkDYore',
-            frames: this.anims.generateFrameNumbers('Yore', {frames: [20, 21, 22, 23, 24, 25]}),
-            frameRate: 6,
-            repeat: -1
-        })
+        this.time.delayedCall(750, () => {
+            this.title = this.add.text(this.sys.game.config.width / 2 - 950, this.sys.game.config.height / 2 + 300, 'Time Two')
+            .setAlpha(0)
+            .setFontSize(50)
+            .setAngle(-25);
 
-        this.anims.create({
-            key: 'walkUYore',
-            frames: this.anims.generateFrameNumbers('Yore', {frames: [10, 11, 12, 13, 14, 15]}),
-            frameRate: 6,
-            repeat: -1
-        })
-
-        // Neo sprites
-        this.anims.create({
-            key: 'idleNeo',
-            frames: this.anims.generateFrameNumbers('Neo', {frames: [0, 1, 2, 3, 4]}),
-            frameRate: 5,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'walkDNeo',
-            frames: this.anims.generateFrameNumbers('Neo', {frames: [10, 11, 12, 13, 14, 15]}),
-            frameRate: 6,
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'walkUNeo',
-            frames: this.anims.generateFrameNumbers('Neo', {frames: [20, 21, 22, 23, 24, 25]}),
-            frameRate: 6, 
-            repeat: -1
-        });
-
-        this.anims.create({
-            key: 'walkLNeo',
-            frames: this.anims.generateFrameNumbers('Neo', {frames: [30, 31, 32, 33, 34, 35, 36, 37]}),
-            frameRate: 8,
-            repeat: -1
-        })
-
-        this.anims.create({
-            key: 'walkRNeo',
-            frames: this.anims.generateFrameNumbers('Neo', {frames: [40, 41, 42, 43, 44, 45, 46, 47]}),
-            frameRate: 8,
-            repeat: -1
-        });
-
-        let text=this.add.text(1920/2-250,540, "Click to start").setFontSize(60).setInteractive();
-    
-            text.on('pointerover', ()=> {
-                // Tween the text to a smaller size
-                this.tweens.add({
-                    targets: text,
-                    scaleX: 0.8,
-                    scaleY: 0.6,
-                    duration: 100,
-                    yoyo: true,
-                    ease: 'Sine.easeInOut'
-                });
+            this.add.tween({
+                targets: this.title,
+                alpha: {from: 0, to: 1},
+                duration: 500
             });
-            
-            // Add event listener for mouseout event
-            text.on('pointerout', () => {
-                // Tween the text back to its original size
-                this.tweens.add({
-                    targets: text,
-                    scaleX: 1,
-                    scaleY: 1,
-                    duration: 100,
-                    yoyo: true,
-                    ease: 'Sine.easeInOut'
-                });
+        })
+        //Bounce effect
+        /*
+        var scaleTween = this.tweens.add({
+            targets: title,
+            scaleX: 1.2,
+            scaleY: 1.2,
+            duration: 1000,
+            yoyo: true,
+            repeat: -1
+        });
+        */
+
+        this.time.delayedCall(950, () => {
+            this.playButton = this.add.text((this.sys.game.config.width / 2 - 900), this.sys.game.config.height / 2 + 400, 'Play')
+            .setAlpha(0)
+            .setFontSize(35)
+            .setAngle(-25);
+
+            this.add.tween({
+                targets: this.playButton,
+                alpha: {from: 0, to: 1},
+                duration: 500
             });
+
+            this.playButton.setInteractive();
+            this.playButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
+                this.playButton.setScale(0.9);
+                this.cameras.main.fadeOut(600, 0, 0, 0);
+                this.time.delayedCall(601, () => {
+                    this.scene.start('yorelevel1');
+                })
+            })
+            this.playButton.on(Phaser.Input.Events.POINTER_UP, () => {
+                this.playButton.setScale(1);
+            })
+        })
+
+        this.time.delayedCall(1100, () => {
+            this.creditButton = this.add.text((this.sys.game.config.width / 2 - 880), this.sys.game.config.height / 2 + 450, 'Credits')
+            .setAlpha(0)
+            .setFontSize(35)
+            .setAngle(-25);
+
+            this.add.tween({
+                targets: this.creditButton,
+                alpha: {from: 0, to: 1},
+                duration: 500
+            });
+
+            this.creditButton.setInteractive();
+            this.creditButton.on(Phaser.Input.Events.POINTER_DOWN, () => {
+                this.creditButton.setScale(0.9);
+                this.cameras.main.fadeOut(600, 0, 0, 0);
+                this.time.delayedCall(601, () => {
+                    this.scene.start('credits');
+                })
+            })
+            this.creditButton.on(Phaser.Input.Events.POINTER_UP, () => {
+                this.creditButton.setScale(1);
+            })
+        })
+
+                //Yore Sprites
+                this.anims.create({
+                    key: 'idleYore',
+                    frames: this.anims.generateFrameNumbers('Yore', {frames: [0, 1, 2, 3, 4]}),
+                    frameRate: 5,
+                    repeat: -1
+                });
         
-        this.input.on('pointerdown', () => {
-                // Tween the text to a smaller size
-                this.tweens.add({
-                    targets: text,
-                    scaleX: 0.8,
-                    scaleY: 0.6,
-                    duration: 50,
-                    yoyo: true,
-                    ease: 'Sine.easeInOut'
+                this.anims.create({
+                    key: 'walkLYore',
+                    frames: this.anims.generateFrameNumbers('Yore', {frames: [30, 31, 32, 33, 34, 35, 36, 37, 38, 39]}),
+                    frameRate: 10,
+                    repeat: -1
                 });
-            
-            this.cameras.main.fade(1000, 0,0,0);
-            this.time.delayedCall(1000, () => this.scene.start('yorelevel1'));
-        });
+        
+                this.anims.create({
+                    key: 'walkRYore',
+                    frames: this.anims.generateFrameNumbers('Yore', {frames: [40, 41, 42, 43, 44, 45, 46, 47, 48, 49]}),
+                    frameRate: 10,
+                    repeat: -1
+                })
+        
+                this.anims.create({
+                    key: 'walkDYore',
+                    frames: this.anims.generateFrameNumbers('Yore', {frames: [20, 21, 22, 23, 24, 25]}),
+                    frameRate: 6,
+                    repeat: -1
+                })
+        
+                this.anims.create({
+                    key: 'walkUYore',
+                    frames: this.anims.generateFrameNumbers('Yore', {frames: [10, 11, 12, 13, 14, 15]}),
+                    frameRate: 6,
+                    repeat: -1
+                })
+        
+                // Neo sprites
+                this.anims.create({
+                    key: 'idleNeo',
+                    frames: this.anims.generateFrameNumbers('Neo', {frames: [0, 1, 2, 3, 4]}),
+                    frameRate: 5,
+                    repeat: -1
+                });
+        
+                this.anims.create({
+                    key: 'walkDNeo',
+                    frames: this.anims.generateFrameNumbers('Neo', {frames: [10, 11, 12, 13, 14, 15]}),
+                    frameRate: 6,
+                    repeat: -1
+                });
+        
+                this.anims.create({
+                    key: 'walkUNeo',
+                    frames: this.anims.generateFrameNumbers('Neo', {frames: [20, 21, 22, 23, 24, 25]}),
+                    frameRate: 6, 
+                    repeat: -1
+                });
+        
+                this.anims.create({
+                    key: 'walkLNeo',
+                    frames: this.anims.generateFrameNumbers('Neo', {frames: [30, 31, 32, 33, 34, 35, 36, 37]}),
+                    frameRate: 8,
+                    repeat: -1
+                })
+        
+                this.anims.create({
+                    key: 'walkRNeo',
+                    frames: this.anims.generateFrameNumbers('Neo', {frames: [40, 41, 42, 43, 44, 45, 46, 47]}),
+                    frameRate: 8,
+                    repeat: -1
+                });
+
+                // Crystal animations
+
+                this.anims.create({
+                    key: 'goal',
+                    frames: 'crystal',
+                    frameRate: 4,
+                    repeat: -1
+                });
     }
+}
+
+class Credits extends Phaser.Scene {
+    constructor() {
+        super('credits')
+    }
+
+    preload() {
+        //this.load.image('titleBackground', '/assets/testTitleBackground.jpg');
+    }
+
+    create() {
+        //let background = this.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2, 'titleBackground');
+        
+        this.cameras.main.fadeIn(750, 0, 0, 0);
+
+        this.add.text((this.sys.game.config.width / 2), (this.sys.game.config.height / 2 - 350), "Credits")
+        .setAlign("center")
+        .setFontSize(70)
+        .setOrigin(0.5, 0.5);
+
+        this.add.text((this.sys.game.config.width / 2), (this.sys.game.config.height / 2 - 200), "Keven Paw - Production Lead")
+        .setAlign("center")
+        .setFontSize(50)
+        .setOrigin(0.5, 0.5);
+
+        this.add.text((this.sys.game.config.width / 2), (this.sys.game.config.height / 2 - 150), "Josey Verespey - Executive Vice Producer, Narrative Lead")
+        .setAlign("center")
+        .setFontSize(50)
+        .setOrigin(0.5, 0.5);
+
+        this.add.text((this.sys.game.config.width / 2), (this.sys.game.config.height / 2 - 100), "Madison Li - Art")
+        .setAlign("center")
+        .setFontSize(50)
+        .setOrigin(0.5, 0.5);
+
+        this.add.text((this.sys.game.config.width / 2), (this.sys.game.config.height / 2 - 50), "Brandon Jacobson - Technology Lead")
+        .setAlign("center")
+        .setFontSize(50)
+        .setOrigin(0.5, 0.5);
+
+        this.add.text((this.sys.game.config.width / 2), (this.sys.game.config.height / 2), "Jimmy Nguyen - Testing Lead, SFX Audio")
+        .setAlign("center")
+        .setFontSize(50)
+        .setOrigin(0.5, 0.5);
+
+        this.retrunToMainMenu = this.add.text((this.sys.game.config.width / 2), (this.sys.game.config.height / 2 + 120), "Return to Main Menu")
+        .setAlign("center")
+        .setFontSize(30)
+        .setOrigin(0.5, 0.5);   
+
+        this.retrunToMainMenu.setInteractive();
+        this.retrunToMainMenu.on(Phaser.Input.Events.POINTER_DOWN, () => {
+            this.retrunToMainMenu.setScale(0.9);
+            this.cameras.main.fadeOut(600, 0, 0, 0);
+            this.time.delayedCall(601, () => {
+                this.scene.start('mainMenu');
+            })
+        })
+        this.retrunToMainMenu.on(Phaser.Input.Events.POINTER_UP, () => {
+            this.retrunToMainMenu.setScale(1);
+        })
+    }
+
 }
 
 class Box extends Phaser.Physics.Arcade.Image {
@@ -171,7 +288,6 @@ class Box extends Phaser.Physics.Arcade.Image {
         scene.add.existing(this);
         scene.physics.add.existing(this);
 
-        this.setCollideWorldBounds()
         this.setInteractive()
         this.setBounce(0)
         this.setPushable(true)
@@ -219,7 +335,13 @@ class YoreLevel1 extends Phaser.Scene{
             this.cameras.main.shake(500,.005);
             this.sound.play('switch');
             
+            
+            
         });
+
+        //crystal
+        const timeSprite = this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2 + 250, 'crystal').play('goal');
+
 
         this.neoImage = this.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Neo").setAlpha(0.5);
         this.neoImage.play('idleNeo');
@@ -231,7 +353,13 @@ class YoreLevel1 extends Phaser.Scene{
         this.player.setImmovable(true);
 
         this.physics.add.collider(this.player, this.groundLayer);
-        
+
+        this.physics.add.collider(this.player, timeSprite, () => {
+            let futureScene = this.scene.get(future);
+            futureScene.scene.remove();
+            this.scene.start('yorelevel2');
+        });
+         
         this.target = new Phaser.Math.Vector2();
         
         // Enable camera to follow the player
@@ -247,9 +375,10 @@ class YoreLevel1 extends Phaser.Scene{
         });
 
         //Block push       
-        this.testBlock = new Box(this, this.sys.game.config.width / 4, this.sys.game.config.height +100);
+        this.testBlock = new Box(this, this.sys.game.config.width / 3, this.sys.game.config.height +100);
 
         this.physics.add.collider(this.player, this.testBlock);
+        this.physics.add.collider(this.testBlock, this.groundLayer);
 
         // launch heads-up-display
         if (hudLoaded == false) {
@@ -370,6 +499,7 @@ class NeoLevel1 extends Phaser.Scene {
 
         //Block push
         this.testBlock = new Box(this, boxX, boxY);
+        this.physics.add.collider(this.testBlock, this.groundLayer);
 
         this.physics.add.collider(this.player, this.testBlock);
 
@@ -453,6 +583,8 @@ class YoreLevel2 extends Phaser.Scene {
     }
 
     create() {
+        console.log('bruh')
+
         past = 'yorelevel2';
         future = 'neolevel2';
         currScene = 'past';
@@ -541,6 +673,8 @@ class NeoLevel2 extends Phaser.Scene {
     }
 
     create() {
+        console.log('moment')
+
         this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 50,this.sys.game.config.height / 2,"Neo");
         this.player.play('idleNeo');
         this.player.body.setSize(80, 128);
@@ -1095,6 +1229,6 @@ const game = new Phaser.Game({
             gravity: { y: 0}
         }
     },
-    scene: [Intro, YoreLevel1, NeoLevel1, YoreLevel2, NeoLevel2, YoreLevel3, NeoLevel3, YoreLevel4, NeoLevel4, HUD],
+    scene: [MainMenu, Credits, YoreLevel1, NeoLevel1, YoreLevel2, NeoLevel2, YoreLevel3, NeoLevel3, YoreLevel4, NeoLevel4, HUD],
     title: "Final Game",
 });
