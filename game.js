@@ -192,6 +192,9 @@ class YoreLevel1 extends Phaser.Scene{
         
         //this.physics.add.image(this.sys.game.config.width / 2,this.sys.game.config.height / 2,'background');
 
+        this.lights.enable().setAmbientColor(0x000000);
+        this.light = this.lights.addLight(this.sys.game.config.width / 2,this.sys.game.config.height / 2, 128*4).setColor(0x00FFFF).setIntensity(1);
+
         const map = this.make.tilemap({key: 'testLevel1'});
 
         const tileset = map.addTilesetImage('protoTiles', 'proto_tiles');
@@ -203,6 +206,13 @@ class YoreLevel1 extends Phaser.Scene{
         this.goalLayer = map.createLayer('Goal', tileset);
 
         this.groundLayer.setCollisionByProperty({collides: true});
+
+        this.groundLayer.setPipeline("Light2D");
+        this.platformLayer.setPipeline("Light2D");
+        this.yoreLayer.setPipeline("Light2D");
+        this.switchesLayer.setPipeline("Light2D");
+        this.goalLayer.setPipeline("Light2D");
+
         this.mapButton = this.add.rectangle(550, 1000, 200, 75, 0xababab, 1).setInteractive();
         this.sound.add('switch');
         this.mapButton.on('pointerdown', () =>
@@ -216,7 +226,6 @@ class YoreLevel1 extends Phaser.Scene{
 
         this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Yore");
         this.player.play('idleYore'); //play idle
-        this.player.setCollideWorldBounds(true, 0, 0);
         this.player.body.setSize(75, 128);
         this.player.setInteractive();
         this.player.setImmovable(true);
@@ -244,6 +253,12 @@ class YoreLevel1 extends Phaser.Scene{
 
         // launch heads-up-display
         this.scene.launch('hud');
+
+        // call wake() when awoken
+        this.events.on(Phaser.Scenes.Events.WAKE, function () {
+            this.wake();
+        }, this);
+        
     }
 
     update() {
@@ -293,9 +308,11 @@ class YoreLevel1 extends Phaser.Scene{
 
         boxX = this.testBlock.x;
         boxY = this.testBlock.y;
+    }
 
-        lightX=this.player.x;
-        lightY=this.player.y;
+    wake() {
+        this.light.x=lightX;
+        this.light.y=lightY;
     }
    
 }
@@ -309,31 +326,26 @@ class NeoLevel1 extends Phaser.Scene {
         this.tempx=0;
         this.tempy=0;
 
-        this.lights.enable().setAmbientColor(0x000000);
-        this.light = this.lights.addLight(180, 80, 128*4).setColor(0x00FFFF).setIntensity(1);
+        const map = this.make.tilemap({key: 'testLevel1'});
 
-        const map = this.make.tilemap({key: 'tilemap'});
+        const tileset = map.addTilesetImage('protoTiles', 'proto_tiles');
 
-        const tileset = map.addTilesetImage('testTileset', 'base_tiles');
+        this.groundLayer = map.createLayer('Ground', tileset);
+        this.platformLayer = map.createLayer('Platforms', tileset);
+        this.neoLayer = map.createLayer('NeoOnly', tileset);
+        this.switchesLayer = map.createLayer('Switches', tileset);
+        this.goalLayer = map.createLayer('Goal', tileset);
 
-        this.groundLayer = map.createLayer('Tile Layer 1', tileset);
-
-        this.solidLayer = map.createLayer('Tile Layer 2', tileset);
-        this.solidLayer.setCollisionByProperty({collides: true});
-        this.solidLayer.setVisible(false);
+        this.groundLayer.setCollisionByProperty({collides: true});
         //this.solidLayer.renderDebug(this.add.graphics());
-
-        this.groundLayer.setPipeline("Light2D");
-        this.solidLayer.setPipeline("Light2D");
 
         this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 50,this.sys.game.config.height / 2,"Neo");
         this.player.play('idleNeo');
-        this.player.setCollideWorldBounds(true, 0, 0);
         this.player.body.setSize(80, 128);
         this.player.setInteractive();
         this.player.setImmovable(true);
 
-        this.physics.add.collider(this.player, this.solidLayer);
+        this.physics.add.collider(this.player, this.groundLayer);
         
         this.target = new Phaser.Math.Vector2();
         
@@ -401,6 +413,9 @@ class NeoLevel1 extends Phaser.Scene {
                 this.player.play('idleNeo');
             }
         }
+
+        lightX=this.player.x;
+        lightY=this.player.y;
     }
 
     wake() {
@@ -412,9 +427,6 @@ class NeoLevel1 extends Phaser.Scene {
             this.tempx=boxX;
             this.tempy=boxY;
         }
-
-        this.light.x=lightX;
-        this.light.y=lightY;
     }
 }
 
@@ -485,7 +497,7 @@ class HUD extends Phaser.Scene {
                     currScene = 'future';
                     swapFuture += 1;
                     this.scene.sleep(past);
-                    this.scene.launch(future);
+                    this.scene.run(future);
                 }
                 else if (currScene == 'future' && swapPast == 0){
                     currScene = 'past';
