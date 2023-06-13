@@ -221,6 +221,9 @@ class YoreLevel1 extends Phaser.Scene{
             
         });
 
+        this.neoImage = this.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Neo").setAlpha(0.5);
+        this.neoImage.play('idleNeo');
+
         this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Yore");
         this.player.play('idleYore'); //play idle
         this.player.body.setSize(75, 128);
@@ -313,6 +316,9 @@ class YoreLevel1 extends Phaser.Scene{
     wake() {
         this.light.x=lightX;
         this.light.y=lightY;
+
+        this.neoImage.x = lightX;
+        this.neoImage.y = lightY;
     }
    
 }
