@@ -31,12 +31,10 @@ class Intro extends Phaser.Scene {
             frameWidth: 128, 
             frameHeight: 128
         });
-        this.load.image('base_tiles', './assets/base_tiles.png');  
         this.load.spritesheet('Neo', './assets/NeoSprite.png', {
             frameWidth: 128,
             frameHeight: 128
         });
-        this.load.tilemapTiledJSON('tilemap', './assets/testMap.json');
         this.load.image('enterFull', './assets/enterFull.png');
         this.load.image('exitFull', './assets/exitFull.png');
         this.load.image('mute', './assets/Muted.png');
@@ -44,6 +42,7 @@ class Intro extends Phaser.Scene {
         this.load.tilemapTiledJSON('testLevel1', './assets/testLevel1.json');
         this.load.image('proto_tiles', './assets/protoTiles.png');
         this.load.tilemapTiledJSON('testLevel3', './assets/testLevel3.tmj')  
+        this.load.image('reset', './assets/reset.png');
     }
 
     create() {
@@ -489,7 +488,7 @@ class HUD extends Phaser.Scene {
         this.swapButton = this.add.rectangle(150, 1000, 200, 75, 0xababab, 1).setInteractive();
         this.muteButton = this.add.image(1750,1020,'mute').setInteractive().setScale(0.8);
         this.fullButton = this.add.image(1850, 1020, 'enterFull').setInteractive();
-        this.resetButton = this.add.rectangle(600, 1000, 200, 75, 0xababab, 1).setInteractive();
+        this.resetButton = this.add.image(400, 1000, 'reset').setInteractive().setScale(0.8);
 
         let theMusic=this.sound.add('music');
 
