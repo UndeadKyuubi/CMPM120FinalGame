@@ -443,11 +443,169 @@ class YoreLevel2 extends Phaser.Scene {
     constructor(){
         super('yorelevel2');
     }
+
+    create() {
+        past = 'yorelevel2';
+        future = 'neolevel2';
+        currScene = 'past';
+        swapPast = 0;
+        swapFuture = 0;
+
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Yore");
+        this.player.play('idleYore'); //play idle
+        this.player.body.setSize(75, 128);
+        this.player.setInteractive();
+        this.player.setImmovable(true);
+        
+        this.target = new Phaser.Math.Vector2();
+        
+        // Enable camera to follow the player
+        this.cameras.main.startFollow(this.player);
+
+        //Point and click movement
+        this.input.on('pointerdown', (pointer) =>
+        {
+            this.target = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+
+            //Move at 200 px/s:
+            this.playerAngle = this.physics.moveToObject(this.player, this.target, 200);
+        });
+
+        // launch heads-up-display
+        if (hudLoaded == false) {
+            this.scene.launch('hud');
+            hudLoaded = true;
+        }
+
+        // call wake() when awoken
+        this.events.on(Phaser.Scenes.Events.WAKE, function () {
+            this.wake();
+        }, this);
+    }
+
+    update() {
+        //controls
+        const tolerance = 4;
+
+        const distance = Phaser.Math.Distance.BetweenPoints(this.player, this.target);
+
+        let angle = this.playerAngle * (180/Math.PI);
+
+        if (this.player.body.speed > 0)
+        {
+            isMoving = true;
+
+            if (distance < tolerance)
+            {
+                this.player.body.reset(this.target.x, this.target.y);
+            }
+
+            if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkLYore' && ((angle < -135 && angle >= -180) || (angle > 135 && angle <= 180))) {
+                this.player.play('walkLYore');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkRYore' && ((angle > -45 && angle <= 0) || (angle < 45 && angle >= 0))){
+                this.player.play('walkRYore');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkUYore' && ((angle <= 135 && angle >= 90) || (angle >= 45 && angle <= 90))){
+                this.player.play('walkUYore');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkDYore' && ((angle >= -135 && angle <= -90) || (angle <= -45 && angle >= -90))){
+                this.player.play('walkDYore');
+            }
+        }
+        else{
+            isMoving = false;
+
+            if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'idleYore') {
+                this.player.play('idleYore');
+            }
+        }
+    }
+
+    wake() {
+
+    }
 }
 
 class NeoLevel2 extends Phaser.Scene {
     constructor(){
         super('neolevel2');
+    }
+
+    create() {
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 50,this.sys.game.config.height / 2,"Neo");
+        this.player.play('idleNeo');
+        this.player.body.setSize(80, 128);
+        this.player.setInteractive();
+        this.player.setImmovable(true);
+        
+        this.target = new Phaser.Math.Vector2();
+        
+        // Enable camera to follow the player
+        this.cameras.main.startFollow(this.player);
+
+        //Point and click movement
+        this.input.on('pointerdown', (pointer) =>
+        {
+            this.target = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+
+            //Move at 200 px/s:
+            this.playerAngle = this.physics.moveToObject(this.player, this.target, 200);
+        });
+
+        // launch heads-up-display
+        if (hudLoaded == false) {
+            this.scene.launch('hud');
+            hudLoaded = true;
+        }
+
+        // call wake() when awoken
+        this.events.on(Phaser.Scenes.Events.WAKE, function () {
+            this.wake();
+        }, this);
+    }
+
+    update() {
+        //controls
+        const tolerance = 4;
+
+        const distance = Phaser.Math.Distance.BetweenPoints(this.player, this.target);
+
+        let angle = this.playerAngle * (180/Math.PI);
+
+        if (this.player.body.speed > 0)
+        {
+            isMoving = true;
+
+            if (distance < tolerance)
+            {
+                this.player.body.reset(this.target.x, this.target.y);
+            }
+
+            if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkLNeo' && ((angle < -135 && angle >= -180) || (angle > 135 && angle <= 180))) {
+                this.player.play('walkLNeo');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkRNeo' && ((angle > -45 && angle <= 0) || (angle < 45 && angle >= 0))){
+                this.player.play('walkRNeo');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkDNeo' && ((angle <= 135 && angle >= 90) || (angle >= 45 && angle <= 90))){
+                this.player.play('walkDNeo');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkUNeo' && ((angle >= -135 && angle <= -90) || (angle <= -45 && angle >= -90))){
+                this.player.play('walkUNeo');
+            }
+        }
+        else{
+            isMoving = false;
+
+            if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'idleNeo') {
+                this.player.play('idleNeo');
+            }
+        }
+    }
+
+    wake() {
+        
     }
 }
 
@@ -455,11 +613,169 @@ class YoreLevel3 extends Phaser.Scene {
     constructor(){
         super('yorelevel3');
     }
+
+    create() {
+        past = 'yorelevel3';
+        future = 'neolevel3';
+        currScene = 'past';
+        swapPast = 0;
+        swapFuture = 0;
+
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Yore");
+        this.player.play('idleYore'); //play idle
+        this.player.body.setSize(75, 128);
+        this.player.setInteractive();
+        this.player.setImmovable(true);
+        
+        this.target = new Phaser.Math.Vector2();
+        
+        // Enable camera to follow the player
+        this.cameras.main.startFollow(this.player);
+
+        //Point and click movement
+        this.input.on('pointerdown', (pointer) =>
+        {
+            this.target = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+
+            //Move at 200 px/s:
+            this.playerAngle = this.physics.moveToObject(this.player, this.target, 200);
+        });
+
+        // launch heads-up-display
+        if (hudLoaded == false) {
+            this.scene.launch('hud');
+            hudLoaded = true;
+        }
+
+        // call wake() when awoken
+        this.events.on(Phaser.Scenes.Events.WAKE, function () {
+            this.wake();
+        }, this);
+    }
+
+    update() {
+        //controls
+        const tolerance = 4;
+
+        const distance = Phaser.Math.Distance.BetweenPoints(this.player, this.target);
+
+        let angle = this.playerAngle * (180/Math.PI);
+
+        if (this.player.body.speed > 0)
+        {
+            isMoving = true;
+
+            if (distance < tolerance)
+            {
+                this.player.body.reset(this.target.x, this.target.y);
+            }
+
+            if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkLYore' && ((angle < -135 && angle >= -180) || (angle > 135 && angle <= 180))) {
+                this.player.play('walkLYore');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkRYore' && ((angle > -45 && angle <= 0) || (angle < 45 && angle >= 0))){
+                this.player.play('walkRYore');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkUYore' && ((angle <= 135 && angle >= 90) || (angle >= 45 && angle <= 90))){
+                this.player.play('walkUYore');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkDYore' && ((angle >= -135 && angle <= -90) || (angle <= -45 && angle >= -90))){
+                this.player.play('walkDYore');
+            }
+        }
+        else{
+            isMoving = false;
+
+            if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'idleYore') {
+                this.player.play('idleYore');
+            }
+        }
+    }
+
+    wake() {
+        
+    }
 }
 
 class NeoLevel3 extends Phaser.Scene {
     constructor(){
         super('neolevel3');
+    }
+
+    create() {
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 50,this.sys.game.config.height / 2,"Neo");
+        this.player.play('idleNeo');
+        this.player.body.setSize(80, 128);
+        this.player.setInteractive();
+        this.player.setImmovable(true);
+        
+        this.target = new Phaser.Math.Vector2();
+        
+        // Enable camera to follow the player
+        this.cameras.main.startFollow(this.player);
+
+        //Point and click movement
+        this.input.on('pointerdown', (pointer) =>
+        {
+            this.target = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+
+            //Move at 200 px/s:
+            this.playerAngle = this.physics.moveToObject(this.player, this.target, 200);
+        });
+
+        // launch heads-up-display
+        if (hudLoaded == false) {
+            this.scene.launch('hud');
+            hudLoaded = true;
+        }
+
+        // call wake() when awoken
+        this.events.on(Phaser.Scenes.Events.WAKE, function () {
+            this.wake();
+        }, this);
+    }
+
+    update() {
+        //controls
+        const tolerance = 4;
+
+        const distance = Phaser.Math.Distance.BetweenPoints(this.player, this.target);
+
+        let angle = this.playerAngle * (180/Math.PI);
+
+        if (this.player.body.speed > 0)
+        {
+            isMoving = true;
+
+            if (distance < tolerance)
+            {
+                this.player.body.reset(this.target.x, this.target.y);
+            }
+
+            if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkLNeo' && ((angle < -135 && angle >= -180) || (angle > 135 && angle <= 180))) {
+                this.player.play('walkLNeo');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkRNeo' && ((angle > -45 && angle <= 0) || (angle < 45 && angle >= 0))){
+                this.player.play('walkRNeo');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkDNeo' && ((angle <= 135 && angle >= 90) || (angle >= 45 && angle <= 90))){
+                this.player.play('walkDNeo');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkUNeo' && ((angle >= -135 && angle <= -90) || (angle <= -45 && angle >= -90))){
+                this.player.play('walkUNeo');
+            }
+        }
+        else{
+            isMoving = false;
+
+            if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'idleNeo') {
+                this.player.play('idleNeo');
+            }
+        }
+    }
+
+    wake() {
+        
     }
 }
 
@@ -467,11 +783,169 @@ class YoreLevel4 extends Phaser.Scene {
     constructor(){
         super('yorelevel4');
     }
+
+    create() {
+        past = 'yorelevel4';
+        future = 'neolevel4';
+        currScene = 'past';
+        swapPast = 0;
+        swapFuture = 0;
+
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Yore");
+        this.player.play('idleYore'); //play idle
+        this.player.body.setSize(75, 128);
+        this.player.setInteractive();
+        this.player.setImmovable(true);
+        
+        this.target = new Phaser.Math.Vector2();
+        
+        // Enable camera to follow the player
+        this.cameras.main.startFollow(this.player);
+
+        //Point and click movement
+        this.input.on('pointerdown', (pointer) =>
+        {
+            this.target = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+
+            //Move at 200 px/s:
+            this.playerAngle = this.physics.moveToObject(this.player, this.target, 200);
+        });
+
+        // launch heads-up-display
+        if (hudLoaded == false) {
+            this.scene.launch('hud');
+            hudLoaded = true;
+        }
+
+        // call wake() when awoken
+        this.events.on(Phaser.Scenes.Events.WAKE, function () {
+            this.wake();
+        }, this);
+    }
+
+    update() {
+        //controls
+        const tolerance = 4;
+
+        const distance = Phaser.Math.Distance.BetweenPoints(this.player, this.target);
+
+        let angle = this.playerAngle * (180/Math.PI);
+
+        if (this.player.body.speed > 0)
+        {
+            isMoving = true;
+
+            if (distance < tolerance)
+            {
+                this.player.body.reset(this.target.x, this.target.y);
+            }
+
+            if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkLYore' && ((angle < -135 && angle >= -180) || (angle > 135 && angle <= 180))) {
+                this.player.play('walkLYore');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkRYore' && ((angle > -45 && angle <= 0) || (angle < 45 && angle >= 0))){
+                this.player.play('walkRYore');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkUYore' && ((angle <= 135 && angle >= 90) || (angle >= 45 && angle <= 90))){
+                this.player.play('walkUYore');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkDYore' && ((angle >= -135 && angle <= -90) || (angle <= -45 && angle >= -90))){
+                this.player.play('walkDYore');
+            }
+        }
+        else{
+            isMoving = false;
+
+            if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'idleYore') {
+                this.player.play('idleYore');
+            }
+        }
+    }
+
+    wake() {
+        
+    }
 }
 
 class NeoLevel4 extends Phaser.Scene {
     constructor(){
         super('neolevel4');
+    }
+
+    create() {
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 50,this.sys.game.config.height / 2,"Neo");
+        this.player.play('idleNeo');
+        this.player.body.setSize(80, 128);
+        this.player.setInteractive();
+        this.player.setImmovable(true);
+        
+        this.target = new Phaser.Math.Vector2();
+        
+        // Enable camera to follow the player
+        this.cameras.main.startFollow(this.player);
+
+        //Point and click movement
+        this.input.on('pointerdown', (pointer) =>
+        {
+            this.target = this.cameras.main.getWorldPoint(pointer.x, pointer.y);
+
+            //Move at 200 px/s:
+            this.playerAngle = this.physics.moveToObject(this.player, this.target, 200);
+        });
+
+        // launch heads-up-display
+        if (hudLoaded == false) {
+            this.scene.launch('hud');
+            hudLoaded = true;
+        }
+
+        // call wake() when awoken
+        this.events.on(Phaser.Scenes.Events.WAKE, function () {
+            this.wake();
+        }, this);
+    }
+
+    update() {
+        //controls
+        const tolerance = 4;
+
+        const distance = Phaser.Math.Distance.BetweenPoints(this.player, this.target);
+
+        let angle = this.playerAngle * (180/Math.PI);
+
+        if (this.player.body.speed > 0)
+        {
+            isMoving = true;
+
+            if (distance < tolerance)
+            {
+                this.player.body.reset(this.target.x, this.target.y);
+            }
+
+            if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkLNeo' && ((angle < -135 && angle >= -180) || (angle > 135 && angle <= 180))) {
+                this.player.play('walkLNeo');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkRNeo' && ((angle > -45 && angle <= 0) || (angle < 45 && angle >= 0))){
+                this.player.play('walkRNeo');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkDNeo' && ((angle <= 135 && angle >= 90) || (angle >= 45 && angle <= 90))){
+                this.player.play('walkDNeo');
+            }
+            else if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'walkUNeo' && ((angle >= -135 && angle <= -90) || (angle <= -45 && angle >= -90))){
+                this.player.play('walkUNeo');
+            }
+        }
+        else{
+            isMoving = false;
+
+            if (this.player.anims.isPlaying && this.player.anims.currentAnim.key != 'idleNeo') {
+                this.player.play('idleNeo');
+            }
+        }
+    }
+
+    wake() {
+        
     }
 }
 
@@ -479,10 +953,6 @@ class HUD extends Phaser.Scene {
     constructor(){
         super('hud');
     }
-
-    // when we move to a new set of levels we can shutdown the old levels, start the next yore level
-    // and when we first swap to new future level, it will launch the next neo level
-    // Probably need to set swapFuture and swapPast back to 0 upon moving to new set of levels
 
     create(){
         this.swapButton = this.add.rectangle(150, 1000, 200, 75, 0xababab, 1).setInteractive();
