@@ -187,7 +187,7 @@
          "name":"UnlockedPlatforms",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":27,
          "x":0,
          "y":0
@@ -225,7 +225,7 @@
          "name":"Switches",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":27,
          "x":0,
          "y":0
@@ -263,28 +263,28 @@
          "name":"Goal",
          "opacity":1,
          "type":"tilelayer",
-         "visible":true,
+         "visible":false,
          "width":27,
          "x":0,
          "y":0
         }],
- "nextlayerid":14,
- "nextobjectid":1,
+ "nextlayerid":15,
+ "nextobjectid":5,
  "orientation":"orthogonal",
  "renderorder":"right-down",
  "tiledversion":"1.10.1",
  "tileheight":128,
  "tilesets":[
         {
-         "columns":7,
+         "columns":10,
          "firstgid":1,
          "image":"..\/Tilesets\/protoTiles.png",
          "imageheight":128,
-         "imagewidth":896,
+         "imagewidth":1280,
          "margin":0,
          "name":"protoTiles",
          "spacing":0,
-         "tilecount":7,
+         "tilecount":10,
          "tileheight":128,
          "tiles":[
                 {
@@ -350,6 +350,19 @@
                          "value":false
                         }]
                 }],
+         "tilewidth":128
+        }, 
+        {
+         "columns":10,
+         "firstgid":11,
+         "image":"..\/Tilesets\/protoTiles.png",
+         "imageheight":128,
+         "imagewidth":1280,
+         "margin":0,
+         "name":"protoTiles",
+         "spacing":0,
+         "tilecount":10,
+         "tileheight":128,
          "tilewidth":128
         }],
  "tilewidth":128,
