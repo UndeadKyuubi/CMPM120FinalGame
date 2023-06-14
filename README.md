@@ -41,3 +41,4 @@ SFX - pixabay.org and mixkit (edited with Audacity)
 
 Code for two unfinished levels are still in the project and are able to be checked out with changing the scene start commands in the scenes.
 
+NOTE: Limited commits are due to most code being done in live share sessions, everyone contributed to the code
