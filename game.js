@@ -369,7 +369,7 @@ class Credits extends Phaser.Scene {
         .setFontSize(50)
         .setOrigin(0.5, 0.5);
 
-        this.add.text((this.sys.game.config.width / 2), (this.sys.game.config.height / 2), "Jimmy Nguyen - Testing Lead, SFX Audio")
+        this.add.text((this.sys.game.config.width / 2), (this.sys.game.config.height / 2), "Jimmy Nguyen - Testing Lead")
         .setAlign("center")
         .setFontSize(50)
         .setOrigin(0.5, 0.5);

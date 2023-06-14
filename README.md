@@ -14,11 +14,11 @@ Brandon Jacobson - Technology Lead
 
 Madison Li - Art 
 
-Jimmy Nguyen - Testing Lead, SFX Audio  
+Jimmy Nguyen - Testing Lead  
 
 Keven Paw - Production Lead, Animation  
 
-Josey Verespey - Executive Vice Producer, Level Design  
+Josey Verespey - Executive Vice Producer
 
 
 # Theme  
