@@ -202,8 +202,8 @@ class MainMenu extends Phaser.Scene {
                 this.playButton.setScale(0.9);
                 this.cameras.main.fadeOut(600, 0, 0, 0);
                 this.time.delayedCall(601, () => {
-                    //this.scene.start('yorelevel1');
-                    this.scene.start('yorelevel4');
+                    this.scene.start('yorelevel1');
+                    //this.scene.start('yorelevel3');
                 })
             })
             this.playButton.on(Phaser.Input.Events.POINTER_UP, () => {
@@ -1110,14 +1110,19 @@ class YoreLevel3 extends Phaser.Scene {
             }
         }
 
-        if (this.testBlock.body.speed > 0) {
+        if (this.Block.body.speed > 0) {
             if(!this.boxSound.isPlaying)
             {
             this.boxSound.play();    
             }  
         }
-
-        if (this.testBlock.body.speed > 0) {
+        if (this.Block2.body.speed > 0) {
+            if(!this.boxSound.isPlaying)
+            {
+            this.boxSound.play();    
+            }  
+        }
+        if (this.Block3.body.speed > 0) {
             if(!this.boxSound.isPlaying)
             {
             this.boxSound.play();    
@@ -1153,7 +1158,7 @@ class NeoLevel3 extends Phaser.Scene {
 
         const map = this.make.tilemap({key: 'neomap3'});
 
-        const tileset = map.addTilesetImage('NeoTilesets', 'neo-tiles');
+        const tileset = map.addTilesetImage('NeoTileset', 'neo-tiles');
 
         this.groundLayer = map.createLayer('Neo floor', tileset);
         this.platformLayer = map.createLayer('Neo wall & top', tileset);
@@ -1170,6 +1175,10 @@ class NeoLevel3 extends Phaser.Scene {
         this.player.setImmovable(true);
 
         const timeSprite = this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2 + 250, 'crystal').play('goal');
+
+        this.physics.add.collider(this.player, this.groundLayer);
+        this.physics.add.collider(this.player, this.platformLayer);
+        this.physics.add.collider(this.player, this.treeLayer);
 
         this.physics.add.collider(this.player, timeSprite, () => {
             let pastScene = this.scene.get(past);
@@ -1190,6 +1199,34 @@ class NeoLevel3 extends Phaser.Scene {
             //Move at 200 px/s:
             this.playerAngle = this.physics.moveToObject(this.player, this.target, 200);
         });
+
+         //Block push
+            // Block 1       
+            this.Block = new Box(this, this.sys.game.config.width / 2 - 250,this.sys.game.config.height / 2 + 1800);
+            this.Block.body.setSize(250, 370);
+        
+            this.physics.add.collider(this.player, this.Block);
+            this.physics.add.collider(this.Block, this.groundLayer);
+            this.physics.add.collider(this.Block, this.platformLayer);
+
+            this.Block = new Box(this, this.sys.game.config.width / 2 - 250, this.sys.game.config.height / 2 + 1800);
+            this.Block.body.setSize(250, 370);
+
+            // Block 2
+            this.Block2 = new Box(this, this.sys.game.config.width / 2 + 1300, this.sys.game.config.height / 2 + 1200);
+            this.Block2.body.setSize(250, 370);
+
+            this.physics.add.collider(this.player, this.Block2);
+            this.physics.add.collider(this.Block2, this.groundLayer);
+            this.physics.add.collider(this.Block2, this.platformLayer);
+
+            // Block 3
+            this.Block3 = new Box(this, this.sys.game.config.width / 2 - 200,this.sys.game.config.height / 2 + 300);
+            this.Block3.body.setSize(250, 370);
+        
+            this.physics.add.collider(this.player, this.Block3);
+            this.physics.add.collider(this.Block3, this.groundLayer);
+            this.physics.add.collider(this.Block3, this.platformLayer);
 
         // launch heads-up-display
         if (hudLoaded == false) {
@@ -1822,7 +1859,7 @@ class EndScene extends Phaser.Scene {
     }
 
     create() {
-        const end = this.add.video(1920*.5, 1080*.5, 'ending').setScale(2);
+        const end = this.add.video(1920*.5, 1080*.5, 'ending');
         
         end.on('locked', () => {
             let message = this.add.text(1920*5, 1080*5, 'Click to play video');

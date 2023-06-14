@@ -1,21 +1,30 @@
 # CMPM120FinalGame
 
+# Links  
+Main Game: https://undeadkyuubi.github.io/CMPM120FinalGame/
+
+Cinematic Prototype: https://undeadkyuubi.github.io/CMPM120FinalGame/cinematics-1.html
+
+Core Gameplay Prototype: https://undeadkyuubi.github.io/CMPM120FinalGame/core-gameplay-1.html
+
+Scene Flow Prototype: https://undeadkyuubi.github.io/CMPM120FinalGame/scene-flow-1.html
+
+# Theme  
+Close in space, distant in time.
+Our game has two people, from different times, trying to reach one another. To do so, they must solve the puzzles of this strange land.
+
+# Selectable Requirements
+Data-Driven Progress: Tiled Levels loaded from Json file
+Advanced Visual Assets: mp4 files used for cutscenes
+Procedural Graphics: Light graphics built within Phaser
+
 # Credits
-Brandon Jacobson - Technology Lead  
+Brandon Jacobson - Technology Lead 
+Madison Li - Art 
 Jimmy Nguyen - Testing Lead, SFX Audio  
-Madison Li - Art  
-Keven Paw - Production Lead  
-Josey Verespey - Executive Vice Producer, Narrative Lead
+Keven Paw - Production Lead, Animation  
+Josey Verespey - Executive Vice Producer, Level Design
 
-Prototype notes:
-- Scene flow:
-    * For scene communications, we provided a simple example of how each scene will communicate with each other. In game.js, it has a better example on how we plan to handle scene communication, which is moving a block from different positions when swapping between scenes.
-
-- Core gameplay:
-    * For progression, it is mapped stage by stage in levels until you reach the end, but progression between scenes is dictated by a swapping mechanic in which players can do something in one scene that alters the level of the other scene allowing the player to progress through the levels and eventually move to the next stage.
-    * The 2nd prefab besides our Box is our use of the .json files in our assets folder. We created our maps outside of phaser with another level editor tool and since the prefab requirement does say that .json data files count, I believe that our map json files should meet the requirement to be our 2nd prefab type
-
-- Cinematics:
-    * For the non-interactive cinematic, the beginning is the studio logo fading into view, the middle is the "blinking" effect, and the end is the logo fading into black.
-    * For the interactive cinematic, the dynamic movement can be seen in how the title's opacity constantly changes, as well as how the options slide into view one after the other. The buttons also darken when hovered over, and lead to placeholder scenes when pressed.
-    * For choreography in code, tween chains were used both for the logo animation (the blinking) and the animation on the title in the menu.
+# Attributed Credits
+BGM - Lullaby for WereWolves by Sharou (Audacity)
+SFX - pixabay.org and mixkit (edited with Audacity) 
