@@ -101,7 +101,7 @@ class MainMenu extends Phaser.Scene {
         super('mainMenu')
     }
     preload() {
-        this.load.image('titleBackground', '/assets/menuArt.jpg');
+        this.load.image('titleBackground', '/assets/menuArt.png');
         //this.load.image('title', './assets/testTitle.jpg');
         this.load.image('cubePast', './assets/cubePast.png');
         this.load.image('cubeFuture', './assets/cubeFuture.png');
@@ -1008,7 +1008,7 @@ class YoreLevel3 extends Phaser.Scene {
         this.player.setImmovable(true);
 
         //crystal
-        const timeSprite = this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2 + 250, 'crystal').play('goal');
+        const timeSprite = this.physics.add.sprite(this.sys.game.config.width / 2 + 800,this.sys.game.config.height / 2 - 150, 'crystal').play('goal');
 
         this.physics.add.collider(this.player, timeSprite, () => {
             let futureScene = this.scene.get(future);
@@ -1362,6 +1362,7 @@ class NeoLevel4 extends Phaser.Scene {
     create() {
         this.temp1x=0;
         this.temp1y=0;
+        let sceneref=this.scene.get('yorelevel4');
         
         this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 50,this.sys.game.config.height / 2,"Neo");
         this.player.play('idleNeo');
@@ -1420,15 +1421,16 @@ class NeoLevel4 extends Phaser.Scene {
                 }
             });
         }
-        if(!platebool2)
+        sceneref.events.on('plate2',function)
+        hasOverlapped=false;
+        if(!platebool3)
         {
-            platebool2=true;
+            platebool3=true;
             this.physics.add.overlap(this.testBlock, this.plate2, () => {
-                if (hasOverlapped == false) {
+                if (hasOverlapped == false&&platebool==true) {
                     hasOverlapped = true;
                     
                     const triggered = this.add.sprite(this.sys.game.config.width / 2 + 760,this.sys.game.config.height / 2 + 900, 'dust').setScale(0.5).play('trigger');
-                    this.events.emit('start');
                 }
             });
         }
