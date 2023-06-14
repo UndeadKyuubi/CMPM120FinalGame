@@ -99,7 +99,7 @@ class MainMenu extends Phaser.Scene {
         super('mainMenu')
     }
     preload() {
-        this.load.image('titleBackground', '/assets/menuArt.png');
+        this.load.image('titleBackground', './assets/menuArt.png');
         this.load.image('cubePast', './assets/cubePast.png');
         this.load.image('cubeFuture', './assets/cubeFuture.png');
         this.load.audio('music',"./assets/LullabyforwerwolvesLofi_original_no_steal_mix_.mp3");
