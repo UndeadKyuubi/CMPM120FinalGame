@@ -43,7 +43,7 @@ class Loading extends Phaser.Scene{
     preload(){
         // progress bar
         const progress = this.add.graphics();
-        this.add.text(920, 450, 'Loading...');
+        const loadText = this.add.text(920, 450, 'Loading...');
         progress.fillStyle(0x222222, 0.8);
         progress.fillRect(815, 470, 320, 50);
 
@@ -54,16 +54,14 @@ class Loading extends Phaser.Scene{
         });
 
         this.load.on('complete', () => {
+            loadText.destroy();
             this.add.text(895, 530, 'Click to begin');
          });
 
         this.load.video('logo', './assets/Studio_Animation.mp4');
     }
     create(){
-        this.add.text(0, 0, 'Loading...');
         this.input.on('pointerdown', ()=> this.scene.start('intro'));
-
-        
     }
 }
 
@@ -102,7 +100,6 @@ class MainMenu extends Phaser.Scene {
     }
     preload() {
         this.load.image('titleBackground', '/assets/menuArt.png');
-        //this.load.image('title', './assets/testTitle.jpg');
         this.load.image('cubePast', './assets/cubePast.png');
         this.load.image('cubeFuture', './assets/cubeFuture.png');
         this.load.audio('music',"./assets/LullabyforwerwolvesLofi_original_no_steal_mix_.mp3");
@@ -206,7 +203,7 @@ class MainMenu extends Phaser.Scene {
                 this.cameras.main.fadeOut(600, 0, 0, 0);
                 this.time.delayedCall(601, () => {
                     //this.scene.start('yorelevel1');
-                    this.scene.start('yorelevel3');
+                    this.scene.start('yorelevel4');
                 })
             })
             this.playButton.on(Phaser.Input.Events.POINTER_UP, () => {
@@ -352,12 +349,12 @@ class Credits extends Phaser.Scene {
         .setFontSize(70)
         .setOrigin(0.5, 0.5);
 
-        this.add.text((this.sys.game.config.width / 2), (this.sys.game.config.height / 2 - 200), "Keven Paw - Production Lead")
+        this.add.text((this.sys.game.config.width / 2), (this.sys.game.config.height / 2 - 200), "Keven Paw - Production Lead, Animation")
         .setAlign("center")
         .setFontSize(50)
         .setOrigin(0.5, 0.5);
 
-        this.add.text((this.sys.game.config.width / 2), (this.sys.game.config.height / 2 - 150), "Josey Verespey - Executive Vice Producer, Narrative Lead")
+        this.add.text((this.sys.game.config.width / 2), (this.sys.game.config.height / 2 - 150), "Josey Verespey - Executive Vice Producer")
         .setAlign("center")
         .setFontSize(50)
         .setOrigin(0.5, 0.5);
@@ -662,7 +659,6 @@ class NeoLevel1 extends Phaser.Scene {
                 this.genLayer.setVisible(true);
                 this.genLayer.setCollisionByProperty({collides: true});
                 this.physics.add.collider(this.player, this.genLayer);
-                this.testBlock.setImmovable(true);
             }
         });
 
@@ -767,16 +763,16 @@ class YoreLevel2 extends Phaser.Scene {
         this.wallLayer.setCollisionByProperty({collides: true});
         this.treeLayer.setCollisionByProperty({collides: true});
         this.lights.enable().setAmbientColor(0x000000);
-        this.light = this.lights.addLight(this.sys.game.config.width / 2,this.sys.game.config.height / 2, 128*4).setColor(0x00FFFF).setIntensity(1);
+        this.light = this.lights.addLight(this.sys.game.config.width / 2 + 650,this.sys.game.config.height / 2 + 2300, 128*4).setColor(0x00FFFF).setIntensity(1);
 
         this.groundLayer.setPipeline("Light2D");
         this.wallLayer.setPipeline("Light2D");
         this.treeLayer.setPipeline("Light2D");
 
-        this.neoImage = this.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Neo").setAlpha(0.5);
+        this.neoImage = this.add.sprite(this.sys.game.config.width / 2 + 650,this.sys.game.config.height / 2 + 2300,"Neo").setAlpha(0.5);
         this.neoImage.play('idleNeo');
 
-        this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Yore");
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 650,this.sys.game.config.height / 2 + 2300,"Yore");
         this.player.play('idleYore'); //play idle
         this.player.body.setSize(75, 128);
         this.player.setInteractive();
@@ -786,12 +782,12 @@ class YoreLevel2 extends Phaser.Scene {
         this.physics.add.collider(this.player, this.wallLayer);
         this.physics.add.collider(this.player, this.treeLayer);
 
-        const timeSprite = this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2 + 250, 'crystal').play('goal');
+        const timeSprite = this.physics.add.sprite(this.sys.game.config.width / 2 + 650,this.sys.game.config.height / 2 + 900, 'crystal').play('goal');
 
         this.physics.add.collider(this.player, timeSprite, () => {
             let futureScene = this.scene.get(future);
             futureScene.scene.remove();
-            this.scene.start('yorelevel3');
+            this.scene.start('endscene');
         });
         
         this.target = new Phaser.Math.Vector2();
@@ -886,7 +882,7 @@ class NeoLevel2 extends Phaser.Scene {
         this.wallLayer.setCollisionByProperty({collides: true});
         this.treeLayer.setCollisionByProperty({collides: true});
 
-        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 50,this.sys.game.config.height / 2,"Neo");
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 650,this.sys.game.config.height / 2 + 2300,"Neo");
         this.player.play('idleNeo');
         this.player.body.setSize(80, 128);
         this.player.setInteractive();
@@ -896,12 +892,12 @@ class NeoLevel2 extends Phaser.Scene {
         this.physics.add.collider(this.player, this.wallLayer);
         this.physics.add.collider(this.player, this.treeLayer);
         
-        const timeSprite = this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2 + 250, 'crystal').play('goal');
+        const timeSprite = this.physics.add.sprite(this.sys.game.config.width / 2 + 650,this.sys.game.config.height / 2 + 900, 'crystal').play('goal');
 
         this.physics.add.collider(this.player, timeSprite, () => {
             let pastScene = this.scene.get(past);
             pastScene.scene.remove();
-            this.scene.start('yorelevel3');
+            this.scene.start('endscene');
         })
         
         this.target = new Phaser.Math.Vector2();
@@ -989,6 +985,8 @@ class YoreLevel3 extends Phaser.Scene {
         swapPast = 0;
         swapFuture = 0;
 
+        this.boxSound = this.sound.add('scrape');
+
         const map = this.make.tilemap({key: 'yoremap3'});
 
         const tileset = map.addTilesetImage('yoreTilesets', 'yore-tiles');
@@ -1001,7 +999,7 @@ class YoreLevel3 extends Phaser.Scene {
         this.platformLayer.setCollisionByProperty({collides: true});
         this.treeLayer.setCollisionByProperty({collides: true});
 
-        this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Yore");
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 800,this.sys.game.config.height / 2 + 2500,"Yore");
         this.player.play('idleYore'); //play idle
         this.player.body.setSize(75, 128);
         this.player.setInteractive();
@@ -1013,7 +1011,7 @@ class YoreLevel3 extends Phaser.Scene {
         this.physics.add.collider(this.player, timeSprite, () => {
             let futureScene = this.scene.get(future);
             futureScene.scene.remove();
-            this.scene.start('yorelevel4');
+            this.scene.start('endscene');
         });
 
         this.physics.add.collider(this.player, this.groundLayer);
@@ -1033,6 +1031,34 @@ class YoreLevel3 extends Phaser.Scene {
             //Move at 200 px/s:
             this.playerAngle = this.physics.moveToObject(this.player, this.target, 200);
         });
+
+            //Block push
+            // Block 1       
+            this.Block = new Box(this, this.sys.game.config.width / 2 - 250,this.sys.game.config.height / 2 + 1800);
+            this.Block.body.setSize(250, 370);
+        
+            this.physics.add.collider(this.player, this.Block);
+            this.physics.add.collider(this.Block, this.groundLayer);
+            this.physics.add.collider(this.Block, this.platformLayer);
+
+            this.Block = new Box(this, this.sys.game.config.width / 2 - 250, this.sys.game.config.height / 2 + 1800);
+            this.Block.body.setSize(250, 370);
+
+            // Block 2
+            this.Block2 = new Box(this, this.sys.game.config.width / 2 + 1300, this.sys.game.config.height / 2 + 1200);
+            this.Block2.body.setSize(250, 370);
+
+            this.physics.add.collider(this.player, this.Block2);
+            this.physics.add.collider(this.Block2, this.groundLayer);
+            this.physics.add.collider(this.Block2, this.platformLayer);
+
+            // Block 3
+            this.Block3 = new Box(this, this.sys.game.config.width / 2 - 200,this.sys.game.config.height / 2 + 300);
+            this.Block3.body.setSize(250, 370);
+        
+            this.physics.add.collider(this.player, this.Block3);
+            this.physics.add.collider(this.Block3, this.groundLayer);
+            this.physics.add.collider(this.Block3, this.platformLayer);
 
         // launch heads-up-display
         if (hudLoaded == false) {
@@ -1084,6 +1110,21 @@ class YoreLevel3 extends Phaser.Scene {
             }
         }
 
+        if (this.testBlock.body.speed > 0) {
+            if(!this.boxSound.isPlaying)
+            {
+            this.boxSound.play();    
+            }  
+        }
+
+        if (this.testBlock.body.speed > 0) {
+            if(!this.boxSound.isPlaying)
+            {
+            this.boxSound.play();    
+            }  
+        }
+    
+
         /*box3_1x = this.box1.x;
         box3_1y = this.box1.y;
         box3_2x = this.box2.x;
@@ -1110,7 +1151,19 @@ class NeoLevel3 extends Phaser.Scene {
         this.temp3x=0;
         this.temp3y=0;
 
-        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 50,this.sys.game.config.height / 2,"Neo");
+        const map = this.make.tilemap({key: 'neomap3'});
+
+        const tileset = map.addTilesetImage('NeoTilesets', 'neo-tiles');
+
+        this.groundLayer = map.createLayer('Neo floor', tileset);
+        this.platformLayer = map.createLayer('Neo wall & top', tileset);
+        this.treeLayer = map.createLayer('Neo tree', tileset);
+
+        this.groundLayer.setCollisionByProperty({collides: true});
+        this.platformLayer.setCollisionByProperty({collides: true});
+        this.treeLayer.setCollisionByProperty({collides: true});
+
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 800,this.sys.game.config.height / 2 + 2500,"Neo");
         this.player.play('idleNeo');
         this.player.body.setSize(80, 128);
         this.player.setInteractive();
@@ -1121,7 +1174,7 @@ class NeoLevel3 extends Phaser.Scene {
         this.physics.add.collider(this.player, timeSprite, () => {
             let pastScene = this.scene.get(past);
             pastScene.scene.remove();
-            this.scene.start('yorelevel4');
+            this.scene.start('endscene');
         })
         
         this.target = new Phaser.Math.Vector2();
@@ -1187,6 +1240,25 @@ class NeoLevel3 extends Phaser.Scene {
                 this.player.play('idleNeo');
             }
         }
+
+        if (this.Block.body.speed > 0) {
+            if(!this.boxSound.isPlaying)
+            {
+            this.boxSound.play();    
+            }  
+        }
+        if (this.Block2.body.speed > 0) {
+            if(!this.boxSound.isPlaying)
+            {
+            this.boxSound.play();    
+            }  
+        }
+        if (this.Block3.body.speed > 0) {
+            if(!this.boxSound.isPlaying)
+            {
+            this.boxSound.play();    
+            }  
+        }
     }
 
     wake() {
@@ -1231,19 +1303,11 @@ class YoreLevel4 extends Phaser.Scene {
         swapPast = 0;
         swapFuture = 0;
 
-        this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Yore");
-        this.player.play('idleYore'); //play idle
-        this.player.body.setSize(75, 128);
-        this.player.setInteractive();
-        this.player.setImmovable(true);
-        this.wallcube=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height*.1,'cubePast');
-        this.wallcube.setImmovable(true);
-        this.physics.add.collider(this.player,this.wallcube);
+        let platebool=false;
+       
         const map = this.make.tilemap({key: 'yoremap4'});
         
-        this.plate1=this.physics.add.sprite(this.sys.game.config.width*.2,this.sys.game.config.height / 2+500,'plate1p');
-        this.plate2=this.physics.add.sprite(this.sys.game.config.width*.6,this.sys.game.config.height*.6,'plate2p');
-        this.plate3=this.physics.add.sprite(this.sys.game.config.width*.3,this.sys.game.config.height *.3,'plate3p');
+        
         
         const tileset = map.addTilesetImage('PASTTILES', 'yore-tiles');
         
@@ -1253,11 +1317,22 @@ class YoreLevel4 extends Phaser.Scene {
         this.groundLayer.setCollisionByProperty({collides: true});
         this.wallLayer.setCollisionByProperty({collides: true});
         this.treeLayer.setCollisionByProperty({collides: true});
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2+925,this.sys.game.config.height / 2+1100,"Yore");
+        this.player.play('idleYore'); //play idle
+        this.player.body.setSize(75, 128);
+        this.player.setInteractive();
+        this.player.setImmovable(true);
+        this.wallcube=this.physics.add.sprite(this.sys.game.config.width / 2+675,this.sys.game.config.height*.5+550,'cubePast');
+        this.wallcube.body.setImmovable(true);
+        this.physics.add.collider(this.player,this.wallcube);
         this.physics.add.collider(this.player,this.groundLayer);
         this.physics.add.collider(this.player,this.wallLayer);
         this.physics.add.collider(this.player,this.treeLayer);
+        this.plate1=this.physics.add.sprite(this.sys.game.config.width*.24,this.sys.game.config.height / 2+1000,'plate1p').setScale(.5);
+        this.plate2=this.physics.add.sprite(this.sys.game.config.width/2+800,this.sys.game.config.height/2+900,'plate2p').setScale(.5);
+        this.plate3=this.physics.add.sprite(this.sys.game.config.width*.46,this.sys.game.config.height*.7+300,'plate3p').setScale(.5);
 
-        const timeSprite = this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2 + 250, 'crystal').play('goal');
+        const timeSprite = this.physics.add.sprite(this.sys.game.config.width / 2+600,this.sys.game.config.height / 2-100, 'crystal').play('goal');
 
         this.physics.add.collider(this.player, timeSprite, () => {
             let hudScene = this.scene.get('hud');
@@ -1293,6 +1368,19 @@ class YoreLevel4 extends Phaser.Scene {
             this.scene.launch('hud');
             hudLoaded = true;
         }
+        if(!platebool)
+        {
+            platebool=true;
+            this.physics.add.overlap(this.testBlock, this.plate2, () => {
+                if (hasOverlapped == false) {
+                    hasOverlapped = true;
+                    
+                    const triggered = this.add.sprite(this.sys.game.config.width / 2 + 760,this.sys.game.config.height / 2 + 900, 'dust').setScale(0.5).play('trigger');
+                    this.events.emit('plate2');
+                }
+            });
+        }
+        
 
         // call wake() when awoken
         this.events.on(Phaser.Scenes.Events.WAKE, function () {
@@ -1300,11 +1388,15 @@ class YoreLevel4 extends Phaser.Scene {
         }, this);
         const sscene=this.scene.get('hud');
         this.sound.add('switch');
-        sscene.events.on('solved',function(){
-           this.sound.play('switch');
-           this.wallcube.destroy();
+        // sscene.events.on('solved',function(){
+        //    this.sound.play('switch');
+        //    this.wallcube.destroy();
             
-        },this);
+        // },this);
+        sscene.events.on('notsolved',function(){
+            platebool=false;
+             
+         },this);
     }
 
     update() {
@@ -1345,8 +1437,8 @@ class YoreLevel4 extends Phaser.Scene {
             }
         }
 
-        box4x = this.box1.x;
-        box4y = this.box1.y;
+        box4x = this.testBlock.x;
+        box4y = this.testBlock.y;
     }
 
     wake() {
@@ -1363,33 +1455,36 @@ class NeoLevel4 extends Phaser.Scene {
         this.temp1x=0;
         this.temp1y=0;
         let sceneref=this.scene.get('yorelevel4');
+        let sscene=this.scene.get('hud');
         
-        this.player=this.physics.add.sprite(this.sys.game.config.width / 2 + 50,this.sys.game.config.height / 2,"Neo");
-        this.player.play('idleNeo');
-        this.player.body.setSize(80, 128);
-        this.player.setInteractive();
-        this.player.setImmovable(true);
         const map = this.make.tilemap({key: 'neomap4'});
         let platebool=false;
         let platebool2=false;
         let platebool3=false;
-        let completeBool=true;
+        let platebool4=false;
+        //let completeBool=true;
 
         const tileset = map.addTilesetImage('FUTURETILES', 'neo-tiles');
         this.groundLayer=map.createLayer('Floor', tileset);
         this.wallLayer=map.createLayer('Wall', tileset);
-        this.treeLayer=map.createLayer('treeoverlay', tileset);
+        this.treeLayer=map.createLayer('tree overlay', tileset);
         this.groundLayer.setCollisionByProperty({collides: true});
         this.wallLayer.setCollisionByProperty({collides: true});
         this.treeLayer.setCollisionByProperty({collides: true});
-        this.wallcube=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height*.1,'cubeFuture');
+        this.player=this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2,"Neo");
+        this.player.play('idleNeo');
+        this.player.body.setSize(80, 128);
+        this.player.setInteractive();
+        this.player.setImmovable(true);
+        this.wallcube=this.physics.add.sprite(this.sys.game.config.width / 2+675,this.sys.game.config.height*.5+550,'cubeFuture');
         this.wallcube.setImmovable(true);
+        
         this.physics.add.collider(this.player,this.wallcube);
 
-        this.plate1=this.physics.add.sprite(this.sys.game.config.width*.2,this.sys.game.config.height / 2+500,'plate1f');
-        this.plate2=this.physics.add.sprite(this.sys.game.config.width*.6,this.sys.game.config.height*.6,'plate2f');
-        this.plate3=this.physics.add.sprite(this.sys.game.config.width*.3,this.sys.game.config.height *.3,'plate3f');
-
+        this.plate1=this.physics.add.sprite(this.sys.game.config.width*.24,this.sys.game.config.height / 2+1000,'plate1f').setScale(.5);
+        //this.plate2=this.physics.add.sprite(this.sys.game.config.width*.6,this.sys.game.config.height*.6,'plate2f').setScale(.5);
+        this.plate3=this.physics.add.sprite(this.sys.game.config.width*.46,this.sys.game.config.height*.7+300,'plate3f').setScale(.5);
+        this.plate4=this.physics.add.sprite(this.sys.game.config.width*.7+2000,this.sys.game.config.height *.6+600,'plate3f').setScale(.5);
         const timeSprite = this.physics.add.sprite(this.sys.game.config.width / 2,this.sys.game.config.height / 2 + 250, 'crystal').play('goal');
 
         this.physics.add.collider(this.player, timeSprite, () => {
@@ -1399,7 +1494,7 @@ class NeoLevel4 extends Phaser.Scene {
             pastScene.scene.remove();
             this.scene.start('endscene');
         })
-        this.testBlock = new Box(this, boxX, boxY);
+        this.testBlock = new Box(this, box4x, box4y);
         this.testBlock.setTexture('cubeFuture');
         this.testBlock.setDepth(2);
         this.testBlock.body.setSize(250, 185);
@@ -1417,23 +1512,52 @@ class NeoLevel4 extends Phaser.Scene {
                     hasOverlapped = true;
                     
                     const triggered = this.add.sprite(this.sys.game.config.width / 2 + 760,this.sys.game.config.height / 2 + 900, 'dust').setScale(0.5).play('trigger');
-                    this.events.emit('start');
+                    this.events.emit('starttime');
                 }
             });
         }
-        sceneref.events.on('plate2',function)
+        sceneref.events.on('plate2',function(){
+            platebool2=true;
+        },this)
         hasOverlapped=false;
         if(!platebool3)
         {
             platebool3=true;
-            this.physics.add.overlap(this.testBlock, this.plate2, () => {
-                if (hasOverlapped == false&&platebool==true) {
+            this.physics.add.overlap(this.testBlock, this.plate3, () => {
+                if (hasOverlapped == false&&platebool==true&&platebool2==true) {
                     hasOverlapped = true;
                     
                     const triggered = this.add.sprite(this.sys.game.config.width / 2 + 760,this.sys.game.config.height / 2 + 900, 'dust').setScale(0.5).play('trigger');
                 }
             });
         }
+        hasOverlapped=false;
+        if(!platebool4)
+        {
+            platebool4=true;
+            this.physics.add.overlap(this.testBlock, this.plate2, () => {
+                if (hasOverlapped == false&&platebool==true&&platebool2==true&&platebool3==true) {
+                    hasOverlapped = true;
+                    
+                    const triggered = this.add.sprite(this.sys.game.config.width / 2 + 760,this.sys.game.config.height / 2 + 900, 'dust').setScale(0.5).play('trigger');
+                    this.scene.emit('complete');
+                }
+            });
+        }
+        this.sound.add('switch');
+        sscene.events.on('solved',function(){
+           this.sound.play('switch');
+           this.wallcube.destroy();
+            
+        },this);
+        sscene.events.on('notsolved',function(){
+            platebool1=false;
+            platebool2=false;
+            platebool3=false;
+            platebool4=false;
+             
+         },this);
+
 
         
         this.target = new Phaser.Math.Vector2();
@@ -1504,8 +1628,8 @@ class NeoLevel4 extends Phaser.Scene {
     wake() {
         if(this.temp1x!=box4x || box4y!=this.temp1y)
         {
-            this.box1.x = box4x;
-            this.box1.y = box4y;
+            this.testBlock.x = box4x;
+            this.testBlock.y = box4y;
 
             this.temp1x=box4x;
             this.temp1y=box4y;
@@ -1523,8 +1647,8 @@ class HUD extends Phaser.Scene {
         this.timer=this.sound.add('timer');
         const sscene=this.scene.get('neolevel4');
         this.timer.loop=true;
-        
-        sscene.events.on('start',function(){
+        this.completion=false;
+        sscene.events.on('starttime',function(){
             this.timedEvent=this.time.delayedCall(20000, this.onEvent, [], this);
             this.timer.play();
         });
@@ -1662,7 +1786,9 @@ class HUD extends Phaser.Scene {
             this.resetButton.clearTint()
         });
         
-        //sscene.events.on()
+        sscene.events.on('complete',function(){
+            this.completion=true;
+        },this);
     }
     update()
     {
@@ -1675,8 +1801,15 @@ class HUD extends Phaser.Scene {
     onEvent()
     {
     console.log('heehee')
+    
     this.timer.stop();
+    if(this.completion)
+    {
     this.events.emit('solved');
+    }
+    else{
+        this.events.emit('notsolved')
+    }
     }
 }
 
@@ -1684,9 +1817,26 @@ class EndScene extends Phaser.Scene {
     constructor() {
         super('endscene')
     }
+    preload(){
+        this.load.video('ending', './assets/ending.mp4');
+    }
 
     create() {
-        console.log('this is the end scene')
+        const end = this.add.video(1920*.5, 1080*.5, 'ending').setScale(2);
+        
+        end.on('locked', () => {
+            let message = this.add.text(1920*5, 1080*5, 'Click to play video');
+            end.on('unlocked', () => {
+                message.destroy();
+            });
+        });
+        
+        this.time.delayedCall(1000, ()=> end.play());
+
+        this.time.delayedCall(6000, ()=> {
+            this.cameras.main.fadeOut(1000, 0, 0, 0);
+            this.scene.start('credits');
+        });
     }
 }
 
